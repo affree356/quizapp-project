@@ -167,7 +167,7 @@ class _adminLoginScreenState extends State<adminLoginScreen> {
   
   void checkLogin(BuildContext ctx) async {
     final username = emailController.text;
-    final password = emailController.text;
+    final password = passController.text;
     if (username == email && password == pass) {
      final _sharedPrefs = await SharedPreferences.getInstance();
     await _sharedPrefs.setString('login_status', 'admin');

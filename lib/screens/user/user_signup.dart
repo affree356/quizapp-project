@@ -1,14 +1,38 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:quiz_app/pages/home_page.dart';
+import 'package:quiz_app/user_auth/firebase_auth.dart';
 
-class SignUpscreen extends StatelessWidget {
+class SignUpscreen extends StatefulWidget {
    SignUpscreen({super.key});
 
+  @override
+  State<SignUpscreen> createState() => _SignUpscreenState();
+}
+
+class _SignUpscreenState extends State<SignUpscreen> {
   final _key =GlobalKey<FormState>();
-  
+
   final TextEditingController emailController = TextEditingController();
+
   final TextEditingController usernameController = TextEditingController();
+
   final TextEditingController passController = TextEditingController();
+
   final TextEditingController confirmController = TextEditingController();
+
+   bool _obscuretext = true;
+   bool _ispassword =true;
+  
+    final FirebaseAuthService _auth =FirebaseAuthService();
+   @override
+  void dispose() {
+   usernameController.dispose();
+   emailController.dispose();
+   passController.dispose();
+   confirmController.dispose();
+       super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,15 +79,19 @@ class SignUpscreen extends StatelessWidget {
                     Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20,),
                         child: TextFormField(
-                          keyboardType: TextInputType.emailAddress,
-                          
+                          keyboardType: TextInputType.text,
+                          controller: usernameController,
                           decoration: InputDecoration(
                              
                               prefixIcon: Icon(Icons.person),
                               hintText: ' Username',
                               
                               hintStyle: TextStyle(color: Colors.grey)),
-                         
+                         validator: (value) {
+                           if(value!.isEmpty){
+                            return 'please enter username';
+                           }
+                         },
                         )),
                     SizedBox(
                       height: 10,
@@ -72,43 +100,84 @@ class SignUpscreen extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: TextFormField(
                           keyboardType: TextInputType.emailAddress,
-                          
+                          controller: emailController,
                           decoration: InputDecoration(
                              
                               prefixIcon: Icon(Icons.email),
                               hintText: 'Email',
                               
                               hintStyle: TextStyle(color: Colors.grey)),
-                         
+                         validator: (value) {
+                           if(value!.isEmpty){
+                            return 'Enter a valid email';
+                           }
+                         },
                         )),
                         SizedBox(height: 10,),
                          Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: TextFormField(
-                          keyboardType: TextInputType.emailAddress,
-                          
+                          keyboardType: TextInputType.text,
+                          controller: passController,
+                          obscureText: _obscuretext,
                           decoration: InputDecoration(
-                             
-                              prefixIcon: Icon(Icons.email),
-                              hintText: ' Password',
+                             suffixIcon: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _obscuretext=!_obscuretext;
+                                });
+                                
+                              },
+                              child:_obscuretext? Icon(Icons.visibility_off):
+                              Icon(Icons.visibility)
+                              ),
+                              prefixIcon: Icon(Icons.lock),
+                              hintText: ' create a Password',
                               
                               hintStyle: TextStyle(color: Colors.grey)),
-                         
+                         validator: (value) {
+                           if(value!.isEmpty){
+                            return 'please create a password';
+                           }else if(passController.text.length<8){
+                            return 'password should be atleast 8 charecters';
+                           }else if(value=='12345678'){
+                            return 'please enter strong password';
+                           }else{
+                            return null;
+                           }
+                         },
                         )),
                         SizedBox(height: 10,),
                     Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: TextFormField(
-                         
-                          obscureText: true,
+                         controller: confirmController,
+                          obscureText: _ispassword,
                           decoration: InputDecoration(
-                             
+                             suffixIcon: GestureDetector(
+                              onTap: (){
+                                setState(() {
+                                  _ispassword=!_ispassword;
+                                });
+                              },
+                              child:_ispassword? Icon(Icons.visibility_off):
+                              Icon(Icons.visibility)
+                              ),
                 
                               prefixIcon: Icon(Icons.lock),
                               hintText: 'Confirm Password',
                               hintStyle: TextStyle(color: Colors.grey)),
-                          
+                          validator: (value){
+                            if(value!.isEmpty){
+                              return 'please confirm your pssword';
+                            }else if(passController.text!=confirmController.text){
+                              return 'please check your password';
+                            }else{
+                              return null;
+                            }
+                          },
                         )),
+                        
                     SizedBox(
                       height: 100,
                     ),
@@ -122,7 +191,7 @@ class SignUpscreen extends StatelessWidget {
                               colors: [Color(0xffB81736), Color(0xff281537)])),
                       child: ElevatedButton(
                         onPressed: () {
-                         
+                         signUp();
                         },
                         child: const Text(
                           'SIGN UP',
@@ -153,5 +222,22 @@ class SignUpscreen extends StatelessWidget {
       ],
     )); 
     
+  }
+
+  void signUp()async{
+    String username = usernameController.text;
+    String email = emailController.text;
+    String pass = passController.text;
+    String confirmpass = confirmController.text;
+     
+     
+    User? user =await _auth.signUpWithEmailandPass(email, pass);
+
+    if(user!=null){
+      print('user is successfully created');
+      Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>homePage()));
+    }else{
+    print('some error occured');
+    }
   }
 }

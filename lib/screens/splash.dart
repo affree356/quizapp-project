@@ -2,7 +2,9 @@
 
 
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:quiz_app/pages/home_page.dart';
 import 'package:quiz_app/screens/admin/admin_page.dart';
 import 'package:quiz_app/screens/info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -48,6 +50,13 @@ class _splashScreenState extends State<splashScreen> {
 
     final _sharedPrefs = await SharedPreferences.getInstance();
     final adminloggedin = _sharedPrefs.getString('login_status');
+      FirebaseAuth user =FirebaseAuth.instance;
+      if(user.currentUser!=null && user.currentUser!.uid.isNotEmpty){
+        Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>homePage()));
+        return;
+      }
+      
+  
     if(adminloggedin==null){
       gotoLogin(context);
     }else if(adminloggedin=='admin'){
