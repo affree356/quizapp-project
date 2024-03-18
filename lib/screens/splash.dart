@@ -1,7 +1,3 @@
-
-
-
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz_app/pages/home_page.dart';
@@ -17,55 +13,51 @@ class splashScreen extends StatefulWidget {
 }
 
 class _splashScreenState extends State<splashScreen> {
-
   @override
   void initState() {
     checkAdminloggedIn(context);
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       body: Container(
         height: double.infinity,
         width: double.infinity,
-        decoration: BoxDecoration(gradient: LinearGradient(colors: [
-          Color(0xffB81736),
-          Color(0xff281537),
-        ]
-        ),image: DecorationImage(image: AssetImage('assets/Union-removebg-preview.png'))
-        ),
+        decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [
+              Color(0xffB81736),
+              Color(0xff281537),
+            ]),
+            image: DecorationImage(
+                image: AssetImage('assets/Union-removebg-preview.png'))),
       ),
     );
   }
 
-   Future<void>gotoLogin(BuildContext context)async{
+  Future<void> gotoLogin(BuildContext context) async {
     await Future.delayed(Duration(seconds: 3));
-   
-   Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx)=>infoScreen()));
+
+    Navigator.of(context)
+        .pushReplacement(MaterialPageRoute(builder: (ctx) => infoScreen()));
   }
 
-  Future <void> checkAdminloggedIn(BuildContext context)async{
-
+  Future<void> checkAdminloggedIn(BuildContext context) async {
     final _sharedPrefs = await SharedPreferences.getInstance();
     final adminloggedin = _sharedPrefs.getString('login_status');
-      FirebaseAuth user =FirebaseAuth.instance;
-      if(user.currentUser!=null && user.currentUser!.uid.isNotEmpty){
-        Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>homePage()));
-        return;
-      }
-      
-  
-    if(adminloggedin==null){
-      gotoLogin(context);
-    }else if(adminloggedin=='admin'){
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx)=>adminPage()));
+    FirebaseAuth user = FirebaseAuth.instance;
+    if (user.currentUser != null && user.currentUser!.uid.isNotEmpty) {
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (ctx) => homePage()));
+      return;
     }
-   
 
-    
-
-     
+    if (adminloggedin == null) {
+      gotoLogin(context);
+    } else if (adminloggedin == 'admin') {
+      Navigator.of(context)
+          .pushReplacement(MaterialPageRoute(builder: (ctx) => adminPage()));
+    }
   }
 }

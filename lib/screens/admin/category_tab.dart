@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz_app/screens/admin/add_category.dart';
+import 'package:quiz_app/screens/admin/edit_category.dart';
 
 class CategoryPage extends StatefulWidget {
   const CategoryPage({super.key});
@@ -49,7 +50,7 @@ class _CategoryPageState extends State<CategoryPage> {
                     Padding(
                       padding: const EdgeInsets.only(left: 100),
                       child: IconButton(onPressed: (){
-                                      
+                                     Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>categoryEdit(id: quizsnap.id,))) ;
                       }, icon: Icon(Icons.edit),color: Colors.black,),
                     ),
                     IconButton(onPressed: (){
@@ -65,4 +66,10 @@ class _CategoryPageState extends State<CategoryPage> {
        }, ),
     );
   }
+
+  // Future updateCategory()async{
+  //   FirebaseFirestore.instance.collection('quiz').doc(quiz).update({
+
+  //   });
+  // }
 }

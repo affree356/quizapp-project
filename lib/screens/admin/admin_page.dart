@@ -1,10 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
-import 'package:quiz_app/screens/admin/add_question.dart';
+
 import 'package:quiz_app/screens/admin/category_tab.dart';
 import 'package:quiz_app/screens/admin/question_tab.dart';
 import 'package:quiz_app/screens/info.dart';
-import 'package:quiz_app/screens/user/user_login.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class adminPage extends StatelessWidget {
