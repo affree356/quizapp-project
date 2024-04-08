@@ -21,14 +21,14 @@ class _categoryEditState extends State<categoryEdit> {
       ),
       body: StreamBuilder(
           stream: FirebaseFirestore.instance
-              .collection('quiz')
+              .collection('category_db')
               .doc(widget.id)
               .snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return CupertinoActivityIndicator();
             } else {
-              category = snapshot.data!['category'];
+              category = snapshot.data!['name'];
               categoryName.text = category;
             }
 
@@ -56,16 +56,17 @@ class _categoryEditState extends State<categoryEdit> {
                   padding: const EdgeInsets.only(left: 280, top: 30),
                   child: Container(
                     height: 50,
-                    width: 80,
+                    width: 100,
                     decoration: BoxDecoration(
                         color: Colors.black,
                         borderRadius: BorderRadius.circular(10)),
                     child: TextButton(
                         onPressed: () {
                           updateCategory(widget.id, categoryName.text);
+                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Update successfully')));
                         },
                         child: Text(
-                          'update ',
+                          'Update ',
                           style: TextStyle(color: Colors.white, fontSize: 20),
                         )),
                   ),
@@ -78,8 +79,9 @@ class _categoryEditState extends State<categoryEdit> {
 
   void updateCategory(String categoryId, String newCategoryName) async {
     await FirebaseFirestore.instance
-        .collection('quiz')
+        .collection('category_db')
         .doc(widget.id)
-        .update({'category': newCategoryName});
+        .update({'name': newCategoryName});
+       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Category updated successfully')));
   }
 }

@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz_app/functions/database_functions.dart';
 import 'package:quiz_app/model/question_model.dart';
+import 'package:quiz_app/screens/admin/question_list.dart';
+
 
 class questionedit extends StatefulWidget {
   final String id;
@@ -15,7 +17,7 @@ class questionedit extends StatefulWidget {
 
 class _questioneditState extends State<questionedit> {
   final CollectionReference quiz =
-      FirebaseFirestore.instance.collection('quiz');
+      FirebaseFirestore.instance.collection('category_db');
   String? value;
   final List<String> _levels = ["Easy", 'Medium', 'Hard'];
   String? level;
@@ -33,9 +35,14 @@ class _questioneditState extends State<questionedit> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          leading: Icon(
-            Icons.arrow_back,
-            color: Colors.white,
+          leading: GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>const QuestionList()));
+            },
+            child:const Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ),
           ),
           backgroundColor: const Color.fromARGB(255, 25, 24, 24),
         ),
@@ -288,7 +295,7 @@ class _questioneditState extends State<questionedit> {
                             borderRadius: BorderRadius.circular(10)),
                         child: StreamBuilder(
                             stream: FirebaseFirestore.instance
-                                .collection('quiz')
+                                .collection('category_db')
                                 .snapshots(),
                             builder: (context, snapshot) {
                               if (!snapshot.hasData) {
@@ -297,7 +304,7 @@ class _questioneditState extends State<questionedit> {
                                 return DropdownButton(
                                     hint: StreamBuilder(
                                         stream: FirebaseFirestore.instance
-                                            .collection('quiz')
+                                            .collection('category_db')
                                             .doc(category)
                                             .snapshots(),
                                         builder: (context, snapshot) {
@@ -305,7 +312,7 @@ class _questioneditState extends State<questionedit> {
                                             return const Text('Category');
                                           } else {
                                             return Text(
-                                                snapshot.data!['category']);
+                                                snapshot.data!['name']);
                                           }
                                         }),
                                     items: List.generate(
@@ -314,7 +321,7 @@ class _questioneditState extends State<questionedit> {
                                       return DropdownMenuItem(
                                         value: snapshot.data!.docs[index].id,
                                         child: Text(snapshot.data!.docs[index]
-                                            ['category']),
+                                            ['name']),
                                       );
                                     }),
                                     onChanged: (value) {
@@ -339,6 +346,7 @@ class _questioneditState extends State<questionedit> {
                         child: ElevatedButton(
                           onPressed: () {
                             updateQuestions(widget.id);
+                             
                           },
                           child: const Text(
                             'Update',
@@ -390,6 +398,8 @@ class _questioneditState extends State<questionedit> {
           category: category,
           levels: level!);
       await updateQuiz(questions, id);
+       ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.green, 
+         content: Text(' update successfully')));
     }
   }
 }

@@ -2,6 +2,8 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+
 import 'package:quiz_app/pages/home_page.dart';
 import 'package:quiz_app/screens/user/user_signup.dart';
 import 'package:quiz_app/user_auth/firebase_auth.dart';
@@ -14,6 +16,7 @@ class userLogin extends StatefulWidget {
 }
 
 class _userLoginState extends State<userLogin> {
+  final TextEditingController usernameContoller =TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
   bool obscureText = true;
@@ -167,6 +170,7 @@ class _userLoginState extends State<userLogin> {
   }
 
   void signIn() async {
+    
     String email = _emailController.text;
     String pass = _passController.text;
 
@@ -175,7 +179,8 @@ class _userLoginState extends State<userLogin> {
     if (user != null) {
       print('user is successfully signedin');
       Navigator.of(context)
-          .push(MaterialPageRoute(builder: (ctx) => homePage()));
+          .push(MaterialPageRoute(builder: (ctx) => HomePage()));
+         
     } else {
       print('some error occured');
     }

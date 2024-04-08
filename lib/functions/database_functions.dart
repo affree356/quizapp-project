@@ -9,6 +9,7 @@ Future addQuiz(QuestionModel data) async {
     'levels': data.levels,
     'category': data.category,
   });
+  
 }
 
 Future updateQuiz(QuestionModel data, String id) async {
@@ -20,11 +21,15 @@ Future updateQuiz(QuestionModel data, String id) async {
     'category': data.category
   });
 }
+Future<void> deleteQuiz(String id)async{
+ await FirebaseFirestore.instance.collection('category_db').doc(id).delete();
+}
 
-Future getQuestionsByCategory(String category) async {
-  final QuerySnapshot = await FirebaseFirestore.instance
-      .collection('question_db')
-      .where('category', isEqualTo: category)
-      .get();
-  return QuerySnapshot.docs;
+Future <bool> checkQuestion(String id)async{
+  final data =  await FirebaseFirestore.instance.collection('question_db').where('category',isEqualTo: id).get();
+    if(data.docs.isEmpty){
+      return true;
+    }else{
+      return false;
+    }
 }

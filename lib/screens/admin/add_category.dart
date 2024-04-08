@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class addCategory extends StatelessWidget {
-  addCategory({super.key});
+
+// ignore: must_be_immutable
+class AddCategory extends StatelessWidget {
+   AddCategory({super.key});
 
   final CollectionReference quiz =
-      FirebaseFirestore.instance.collection('quiz');
+      FirebaseFirestore.instance.collection('category_db');
 
   TextEditingController categoryName = TextEditingController();
 
@@ -48,6 +50,8 @@ class addCategory extends StatelessWidget {
               child: TextButton(
                   onPressed: () {
                     addquiz();
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.green,    content: Text('Added successfully')));
+                   
                   },
                   child: Text(
                     'Add',

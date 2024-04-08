@@ -1,20 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
-
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:quiz_app/functions/database_functions.dart';
 import 'package:quiz_app/model/question_model.dart';
 
-class addQuestionPage extends StatefulWidget {
-  const addQuestionPage({super.key});
+class AddQuestionPage extends StatefulWidget {
+  const AddQuestionPage({super.key});
 
   @override
-  State<addQuestionPage> createState() => _addQuestionPageState();
+  State<AddQuestionPage> createState() => _AddQuestionPageState();
 }
 
-class _addQuestionPageState extends State<addQuestionPage> {
+class _AddQuestionPageState extends State<AddQuestionPage> {
   final CollectionReference quiz =
-      FirebaseFirestore.instance.collection('quiz');
+      FirebaseFirestore.instance.collection('category_db');
   String? value;
   final List<String> _levels = ["Easy", 'Medium', 'Hard'];
   String? level;
@@ -23,12 +23,10 @@ class _addQuestionPageState extends State<addQuestionPage> {
   final TextEditingController op1Controller = TextEditingController();
   final TextEditingController op2Controller = TextEditingController();
   final TextEditingController op3Controller = TextEditingController();
-  String category = '2goDHAQTayoOIqMVCjfM';
-
+  String category = '';
   final TextEditingController op4Controller = TextEditingController();
-
   final TextEditingController ansController = TextEditingController();
-
+  final _formkey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +35,7 @@ class _addQuestionPageState extends State<addQuestionPage> {
             onTap: () {
               Navigator.of(context).pop();
             },
-            child: Icon(
+            child:const Icon(
               Icons.arrow_back,
               color: Colors.white,
             )),
@@ -219,8 +217,12 @@ class _addQuestionPageState extends State<addQuestionPage> {
                 decoration: BoxDecoration(
                     color: const Color(0xFFececF8),
                     borderRadius: BorderRadius.circular(10)),
-                child: TextField(
+                child: TextFormField(
+                  key: _formkey,
                   keyboardType: TextInputType.number,
+                  inputFormatters: <TextInputFormatter>[
+              FilteringTextInputFormatter.digitsOnly
+            ], 
                   controller: ansController,
                   decoration: const InputDecoration(
                       border: InputBorder.none,
@@ -229,6 +231,15 @@ class _addQuestionPageState extends State<addQuestionPage> {
                         color: Colors.black,
                         fontSize: 18,
                       )),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Please enter correct answer';
+                    }else if(int.parse(value)<0||int.parse(value)>4){
+                      return 'value must be betweel 0 and 3';
+                    }
+                    
+                    return null;
+                  },
                 ),
               ),
             ),
@@ -273,23 +284,23 @@ class _addQuestionPageState extends State<addQuestionPage> {
                     borderRadius: BorderRadius.circular(10)),
                 child: StreamBuilder(
                     stream: FirebaseFirestore.instance
-                        .collection('quiz')
+                        .collection('category_db')
                         .snapshots(),
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {
                         return const CupertinoActivityIndicator();
                       } else {
                         return DropdownButton(
-                            hint: StreamBuilder(
+                            hint: category.isEmpty?Text('Select a category'):StreamBuilder(
                                 stream: FirebaseFirestore.instance
-                                    .collection('quiz')
+                                    .collection('category_db')
                                     .doc(category)
                                     .snapshots(),
                                 builder: (context, snapshot) {
                                   if (!snapshot.hasData) {
                                     return const Text('Category');
                                   } else {
-                                    return Text(snapshot.data!['category']);
+                                    return Text(snapshot.data!['name']);
                                   }
                                 }),
                             items: List.generate(snapshot.data!.docs.length,
@@ -298,7 +309,7 @@ class _addQuestionPageState extends State<addQuestionPage> {
                               return DropdownMenuItem(
                                 value: snapshot.data!.docs[index].id,
                                 child: Text(
-                                    snapshot.data!.docs[index]['category']),
+                                    snapshot.data!.docs[index]['name']),
                               );
                             }),
                             onChanged: (value) {
@@ -364,7 +375,7 @@ class _addQuestionPageState extends State<addQuestionPage> {
           levels: level!);
       addQuiz(data);
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          backgroundColor: Colors.greenAccent,
+          backgroundColor: Colors.green,
           content: Text(
             'Added successfully',
             style: TextStyle(fontSize: 18),

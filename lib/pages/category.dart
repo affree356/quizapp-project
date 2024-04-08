@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:quiz_app/pages/categories/questions.dart';
 
-class userCategory extends StatelessWidget {
-   userCategory({super.key});
- final CollectionReference quiz = FirebaseFirestore.instance.collection('quiz');
+class UserCategory extends StatelessWidget {
+   UserCategory({super.key});
+ final CollectionReference category = FirebaseFirestore.instance.collection('category_db');
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,6 +14,7 @@ class userCategory extends StatelessWidget {
              height: double.infinity,
             width: double.infinity,
             decoration: BoxDecoration(
+              
               gradient: LinearGradient(
                 colors: [
                   Color(0xffB81736),
@@ -21,24 +23,35 @@ class userCategory extends StatelessWidget {
               ),
             ),
             child: StreamBuilder(
-              stream: quiz.snapshots(), 
+              stream: category.snapshots(), 
             builder: (context,snapshot){
               if(snapshot.hasData){  
                return GridView.builder(gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                mainAxisSpacing: 10,
+                mainAxisSpacing: 5,
                 crossAxisSpacing: 10,
+                
                 
                ),
                itemCount: snapshot.data!.docs.length, 
                itemBuilder:(context,index){
                 final quizsnap = snapshot.data!.docs[index];
                return Card(
-                color:  Colors.transparent,
-                child: Center(child: Text(quizsnap['category'],style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold,color: Colors.black),)));
+                
+                elevation: 5,margin: EdgeInsets.all(10),
+                // color: Color.fromARGB(255, 213, 209, 209),
+                color: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(21),bottomRight: Radius.circular(21))),
+                child: Center(child: GestureDetector(
+                 
+                onTap: () {
+                 Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>Questions(category: quizsnap.id)));
+                },
+                  child: Text(quizsnap['name'],style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold,color: Colors.black),))));
                 
                } ,
-              
+                             
                );
               }return Container();
             },
@@ -51,5 +64,3 @@ class userCategory extends StatelessWidget {
   }
  
 }
-// final quizsnap = snapshot.data!.docs[index];
-//                 return Text(quizsnap['category']);

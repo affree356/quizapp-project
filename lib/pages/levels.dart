@@ -1,10 +1,18 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:quiz_app/pages/Levels/quiz.dart';
 
-class levelPage extends StatelessWidget {
-  levelPage({super.key});
 
-  final Levels = ['Easy', 'Medium', 'Hard'];
+class LevelPage extends StatefulWidget {
+ const LevelPage({super.key});
+
+  @override
+  State<LevelPage> createState() => _LevelPageState();
+}
+
+class _LevelPageState extends State<LevelPage> {
+  final levels = ['Easy', 'Medium', 'Hard'];
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +20,9 @@ class levelPage extends StatelessWidget {
         body: Container(
       height: double.infinity,
       width: double.infinity,
-      decoration: BoxDecoration(
+      decoration:const BoxDecoration(
+        // color: Color.fromARGB(255, 10, 147, 118)
+       
         gradient: LinearGradient(
           colors: [
             Color(0xffB81736),
@@ -24,31 +34,38 @@ class levelPage extends StatelessWidget {
         children: [
           Expanded(
             child: ListView.builder(
-                itemCount: Levels.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                        height: 80,
-                        decoration: BoxDecoration(
-                            color: Colors.transparent,
-                            border: Border.all(
-                              width: 3,
-                              color: Colors.black,
-                            ),
-                            borderRadius: BorderRadius.circular(30)),
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 30, top: 16),
-                          child: Text(
-                            Levels[index],
-                            style: TextStyle(
-                              fontSize: 30,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        )),
-                  );
-                }),
+                    itemCount: levels.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>QuizPage(levels: levels[index])));
+                          },
+                          child: Container(
+                              height: 80,
+                              
+                             decoration: BoxDecoration(
+                                        color: Colors.white,
+                                         boxShadow: [BoxShadow(
+                                          color: Colors.grey,
+                                          blurRadius: 2,
+                                          offset: Offset(0, 10)
+                                         )],
+                                  borderRadius: BorderRadius.circular(30,)),
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 30, top: 16),
+                                child: Text(
+                                  levels[index],
+                                  style: TextStyle(
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              )),
+                        ),
+                      );
+                    })
           )
         ],
       ),

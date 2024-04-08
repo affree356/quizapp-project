@@ -2,13 +2,14 @@
 import 'package:flutter/material.dart';
 
 import 'package:quiz_app/screens/admin/category_tab.dart';
-import 'package:quiz_app/screens/admin/question_tab.dart';
+import 'package:quiz_app/screens/admin/question_list.dart';
+
 import 'package:quiz_app/screens/info.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-class adminPage extends StatelessWidget {
-  const adminPage({super.key});
+class AdminPage extends StatelessWidget {
+  const AdminPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -34,8 +35,9 @@ class adminPage extends StatelessWidget {
           ],
         ),
         body: TabBarView(children:[
-          CategoryPage(),
-         questionTab(),
+        const  CategoryPage(),
+        QuestionList()
+       
 
           ])
         ),
@@ -44,8 +46,31 @@ class adminPage extends StatelessWidget {
     
   }
   void signout(BuildContext context)async{
+    
      final _sharedPrefs = await SharedPreferences.getInstance();
      await _sharedPrefs.clear();
-     Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx)=>infoScreen()), (route) => false);
+      // ignore: use_build_context_synchronously
+      showDialog(
+        context: context,
+        builder: (ctx1) {
+          return AlertDialog(
+            title: const Text('Logout'),
+            content: const Text('Do you want to exit the app'),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                     Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx)=>const infoScreen()), (route) => false);
+                  },
+                  child: const Text('yes')),
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(ctx1).pop();
+                  },
+                  child: const Text('No'))
+            ],
+          );
+        });
+    
   }
+
 }

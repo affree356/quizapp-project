@@ -5,14 +5,14 @@ import 'package:quiz_app/screens/admin/admin_page.dart';
 import 'package:quiz_app/screens/info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class splashScreen extends StatefulWidget {
-  const splashScreen({super.key});
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
 
   @override
-  State<splashScreen> createState() => _splashScreenState();
+  State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _splashScreenState extends State<splashScreen> {
+class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     checkAdminloggedIn(context);
@@ -25,7 +25,7 @@ class _splashScreenState extends State<splashScreen> {
       body: Container(
         height: double.infinity,
         width: double.infinity,
-        decoration: BoxDecoration(
+        decoration:const BoxDecoration(
             gradient: LinearGradient(colors: [
               Color(0xffB81736),
               Color(0xff281537),
@@ -37,10 +37,11 @@ class _splashScreenState extends State<splashScreen> {
   }
 
   Future<void> gotoLogin(BuildContext context) async {
-    await Future.delayed(Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 3));
 
+    // ignore: use_build_context_synchronously
     Navigator.of(context)
-        .pushReplacement(MaterialPageRoute(builder: (ctx) => infoScreen()));
+        .pushReplacement(MaterialPageRoute(builder: (ctx) => const infoScreen()));
   }
 
   Future<void> checkAdminloggedIn(BuildContext context) async {
@@ -49,7 +50,7 @@ class _splashScreenState extends State<splashScreen> {
     FirebaseAuth user = FirebaseAuth.instance;
     if (user.currentUser != null && user.currentUser!.uid.isNotEmpty) {
       Navigator.of(context)
-          .push(MaterialPageRoute(builder: (ctx) => homePage()));
+          .push(MaterialPageRoute(builder: (ctx) => HomePage()));
       return;
     }
 
@@ -57,7 +58,7 @@ class _splashScreenState extends State<splashScreen> {
       gotoLogin(context);
     } else if (adminloggedin == 'admin') {
       Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (ctx) => adminPage()));
+          .pushReplacement(MaterialPageRoute(builder: (ctx) => AdminPage()));
     }
   }
 }

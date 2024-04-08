@@ -1,11 +1,18 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:quiz_app/firebase_options.dart';
-import 'package:quiz_app/screens/splash.dart';
+import 'package:quiz_app/model/user_model.dart';
 
+import 'package:quiz_app/screens/splash.dart';
+const user_login ='UserSigned';
 const login_status  ='UserloggedIn';
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
+   await Hive.initFlutter();
+  if(!Hive.isAdapterRegistered(UserModelAdapter().typeId)){
+    Hive.registerAdapter(UserModelAdapter());
+  }
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -26,7 +33,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: splashScreen() 
+      home:const SplashScreen() 
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quiz_app/screens/admin/admin_page.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class adminLoginScreen extends StatefulWidget {
@@ -169,7 +170,7 @@ class _adminLoginScreenState extends State<adminLoginScreen> {
       final _sharedPrefs = await SharedPreferences.getInstance();
       await _sharedPrefs.setString('login_status', 'admin');
       Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (ctx1) => adminPage()));
+          .pushAndRemoveUntil(MaterialPageRoute(builder: (ctx1) => AdminPage()), (route) => false);
     }
   }
 }

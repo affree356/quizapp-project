@@ -1,33 +1,29 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:quiz_app/screens/admin/add_question.dart';
+import 'package:quiz_app/functions/database_functions.dart';
 import 'package:quiz_app/screens/admin/edit.question.dart';
+import 'package:quiz_app/screens/admin/question_list.dart';
 
-class questionTab extends StatelessWidget {
-  questionTab({super.key});
+class QuestionDetails extends StatefulWidget {
+  final String question;
+  const QuestionDetails({super.key, required this.question});
 
+  @override
+  State<QuestionDetails> createState() => _QuestionDetails();
+}
+
+class _QuestionDetails extends State<QuestionDetails> {
   final _pageController = PageController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (ctx) => addQuestionPage()));
-        },
-        backgroundColor: Color.fromARGB(255, 39, 38, 38),
-        child: const Icon(
-          Icons.add,
-          color: Colors.white,
-          size: 30,
-        ),
-      ),
       body: StreamBuilder(
-          stream:
-              FirebaseFirestore.instance.collection('question_db').snapshots(),
+          stream: FirebaseFirestore.instance
+              .collection('question_db')
+              .where('question', isEqualTo: widget.question)
+              .snapshots(),
           builder: (context, AsyncSnapshot snapshot) {
             if (snapshot.hasData) {
               return PageView.builder(
@@ -39,8 +35,6 @@ class questionTab extends StatelessWidget {
                       padding: const EdgeInsets.all(20),
                       child: Container(
                         decoration: const BoxDecoration(
-
-                            
                             borderRadius: BorderRadius.only(
                                 topRight: Radius.circular(30),
                                 topLeft: Radius.circular(30)),
@@ -60,7 +54,7 @@ class questionTab extends StatelessWidget {
                               children: [
                                 StreamBuilder(
                                     stream: FirebaseFirestore.instance
-                                        .collection('quiz')
+                                        .collection('category_db')
                                         .doc(quizsnap['category'])
                                         .snapshots(),
                                     builder: (context, snapshot) {
@@ -68,7 +62,7 @@ class questionTab extends StatelessWidget {
                                         return CupertinoActivityIndicator();
                                       } else {
                                         return Text(
-                                          snapshot.data!['category'],
+                                          snapshot.data!['name'],
                                         );
                                       }
                                     }),
@@ -110,7 +104,7 @@ class questionTab extends StatelessWidget {
                                             fontWeight: FontWeight.w500),
                                       ),
                                     )),
-                             const   SizedBox(
+                                const SizedBox(
                                   height: 10,
                                 ),
                                 Container(
@@ -128,7 +122,7 @@ class questionTab extends StatelessWidget {
                                             fontWeight: FontWeight.w500),
                                       ),
                                     )),
-                            const    SizedBox(
+                                const SizedBox(
                                   height: 10,
                                 ),
                                 Container(
@@ -146,7 +140,7 @@ class questionTab extends StatelessWidget {
                                             fontWeight: FontWeight.w500),
                                       ),
                                     )),
-                           const     SizedBox(
+                                const SizedBox(
                                   height: 10,
                                 ),
                                 Container(
@@ -164,7 +158,7 @@ class questionTab extends StatelessWidget {
                                             fontWeight: FontWeight.w500),
                                       ),
                                     )),
-                              const  SizedBox(
+                                const SizedBox(
                                   height: 20,
                                 ),
                                 Text(
@@ -173,7 +167,7 @@ class questionTab extends StatelessWidget {
                                       fontSize: 20,
                                       fontWeight: FontWeight.w500),
                                 ),
-                             const   SizedBox(
+                                const SizedBox(
                                   height: 10,
                                 ),
                                 Text(
@@ -182,10 +176,10 @@ class questionTab extends StatelessWidget {
                                       fontSize: 20,
                                       fontWeight: FontWeight.w500),
                                 ),
-                             const   SizedBox(
+                                const SizedBox(
                                   height: 20,
                                 ),
-                             const   Align(
+                                const Align(
                                   alignment: Alignment.bottomCenter,
                                 ),
                                 Row(
@@ -204,9 +198,22 @@ class questionTab extends StatelessWidget {
                                           Icons.edit,
                                           size: 30,
                                         )),
-                                    const Icon(
-                                      Icons.delete,
-                                      size: 30,
+                                    GestureDetector(
+                                      onTap: () {
+                                        deleteQuiz(quizsnap.id);
+                                        Navigator.of(context).pushReplacement(
+                                            MaterialPageRoute(
+                                                builder: (ctx) =>
+                                                    QuestionList()));
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                                content: Text(
+                                                    ' Deleted successfully')));
+                                      },
+                                      child: const Icon(
+                                        Icons.delete,
+                                        size: 30,
+                                      ),
                                     ),
                                   ],
                                 ),

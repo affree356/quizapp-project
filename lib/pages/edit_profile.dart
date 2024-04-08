@@ -1,28 +1,29 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz_app/functions/db_functions.dart';
+import 'package:quiz_app/model/user_model.dart';
 
-import 'package:quiz_app/pages/edit_profile.dart';
-
-class ProfilePage extends StatefulWidget {
-  //  final UserModel userModel;
-final String id ;
-  const ProfilePage({super.key,required this.id,});
+class Editprofile extends StatefulWidget {
+  // final  UserModel usermodel;
+  final id;
+  const Editprofile({
+    super.key,
+    required this.id,
+  });
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  State<Editprofile> createState() => _EditprofileState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
-
-  
-  
+class _EditprofileState extends State<Editprofile> {
+  final TextEditingController username = TextEditingController();
+  final TextEditingController email = TextEditingController();
 
   @override
   void initState() {
+    getUser();
     super.initState();
   }
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: Stack(
@@ -70,65 +71,61 @@ class _ProfilePageState extends State<ProfilePage> {
                           child: Column(
                             //  mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Container(
-                                width: 100,
-                                decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    boxShadow: [
-                                      BoxShadow(
-                                          color: Colors.black26,
-                                          blurRadius: 5,
-                                          spreadRadius: 1)
-                                    ]),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                    left: 50,
-                                  ),
-                                  child: IconButton(
-                                      onPressed: () {
-                                        Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                                builder: (ctx) =>
-                                                    Editprofile(id: widget.id,)));
-                                      },
-                                      icon: Icon(Icons.edit)),
-                                ),
-                              ),
                               SizedBox(
                                 height: 80,
                               ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 30),
+                                child: TextFormField(
+                                  controller: username,
+                                  decoration: InputDecoration(
+                                      hintText: 'Username!',
+                                      border: OutlineInputBorder()),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 30),
+                                child: TextFormField(
+                                    controller: email,
+                                    decoration: InputDecoration(
+                                        hintText: 'Email!',
+                                        border: OutlineInputBorder())),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
                              
                               SizedBox(
-                                height: 10,
+                                height: 20,
                               ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 30),
-                                child: TextFormField(
-                                    decoration: InputDecoration(
-                                        hintText: '${userData?.username}',
-                                        border: OutlineInputBorder())),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 30),
-                                child: TextFormField(
-                                    decoration: InputDecoration(
-                                        hintText: '${userData?.gmail}',
-                                        border: OutlineInputBorder())),
-                              ),
-                              // SizedBox(height: 10,),
-                              // Padding(
-                              //   padding: const EdgeInsets.symmetric(horizontal: 20),
-                              //   child: TextFormField(decoration: InputDecoration(
-                              //       hintText: 'About us',
-                              //       border: OutlineInputBorder(
-
-                              //       ))),
-                              // ),
+                              Card(
+                                elevation: 10,
+                                child: Container(
+                                  width: 120,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5),
+                                      color: Color.fromARGB(255, 49, 127, 51)),
+                                  child: Center(
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          updateUser(widget.id);
+                                        },
+                                        child: Text(
+                                                                            'Submit',
+                                                                            style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.w600),
+                                                                          ),
+                                      )),
+                                ),
+                              )
                             ],
                           )),
                     )
@@ -140,5 +137,28 @@ class _ProfilePageState extends State<ProfilePage> {
         )
       ],
     ));
+  }
+
+  Future<void> updateUser(int id) async {
+    final name = username.text;
+    final gmail = email.text;
+
+    if (name.isEmpty&&gmail.isEmpty){
+      return;
+    }else{
+
+    final data = UserModel(
+        username: name,
+        gmail: gmail,
+        age: '',
+        question: '',
+        correctAnswerIndex: [],
+        wrongAnswerIndex: [],
+        score: 0,
+        firebaseId: '');
+        await editUser(data, id);
+         ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.green, 
+         content: Text(' update successfully')));
+    }
   }
 }

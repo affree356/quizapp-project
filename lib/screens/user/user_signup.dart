@@ -1,7 +1,12 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:quiz_app/functions/db_functions.dart';
+import 'package:quiz_app/model/user_model.dart';
 import 'package:quiz_app/pages/home_page.dart';
 import 'package:quiz_app/user_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignUpscreen extends StatefulWidget {
   SignUpscreen({super.key});
@@ -92,7 +97,7 @@ class _SignUpscreenState extends State<SignUpscreen> {
                           validator: (value) {
                             if (value!.isEmpty) {
                               return 'please enter username';
-                            }else{
+                            } else {
                               return null;
                             }
                           },
@@ -112,7 +117,7 @@ class _SignUpscreenState extends State<SignUpscreen> {
                           validator: (value) {
                             if (value!.isEmpty) {
                               return 'Enter a valid email';
-                            }else{
+                            } else {
                               return null;
                             }
                           },
@@ -167,9 +172,9 @@ class _SignUpscreenState extends State<SignUpscreen> {
                                     });
                                   },
                                   child: _ispassword
-                                      ? Icon(Icons.visibility_off)
-                                      : Icon(Icons.visibility)),
-                              prefixIcon: Icon(Icons.lock),
+                                      ? const Icon(Icons.visibility_off)
+                                      : const Icon(Icons.visibility)),
+                              prefixIcon: const Icon(Icons.lock),
                               hintText: 'Confirm Password',
                               hintStyle: TextStyle(color: Colors.grey)),
                           validator: (value) {
@@ -183,7 +188,7 @@ class _SignUpscreenState extends State<SignUpscreen> {
                             }
                           },
                         )),
-                    SizedBox(
+                    const SizedBox(
                       height: 100,
                     ),
                     Container(
@@ -196,7 +201,15 @@ class _SignUpscreenState extends State<SignUpscreen> {
                               colors: [Color(0xffB81736), Color(0xff281537)])),
                       child: ElevatedButton(
                         onPressed: () {
-                          signUp();
+                          signUp(UserModel(
+                              firebaseId: '',
+                              username: usernameController.text,
+                              gmail: emailController.text,
+                              age: '',
+                              question: '',
+                              correctAnswerIndex: [],
+                              wrongAnswerIndex: [],
+                              score: 0));
                         },
                         child: const Text(
                           'SIGN UP',
@@ -241,20 +254,32 @@ class _SignUpscreenState extends State<SignUpscreen> {
     ));
   }
 
-  void signUp() async {
-    
+  void signUp(UserModel value) async {
+    String username = usernameController.text;
     String email = emailController.text;
     String pass = passController.text;
-   
+    // FirebaseAuth user = FirebaseAuth.instance;
 
     User? user = await _auth.signUpWithEmailandPass(email, pass);
-
     if (user != null) {
-      print('user is successfully created');
+      final newUser = UserModel(
+          firebaseId: FirebaseAuth.instance.currentUser!.uid,
+          username: username,
+          gmail: email,
+          age: '',
+          question: '',
+          correctAnswerIndex: [],
+          wrongAnswerIndex: [],
+          score: 0);
+      await addUser(newUser);
+      //   final _sharedprefs = await SharedPreferences.getInstance();
+      //   final userloggedin = _sharedprefs.setString('user_login', user.uid);
+      // print('user is successfully created');
       Navigator.of(context)
-          .push(MaterialPageRoute(builder: (ctx) => homePage()));
+          .push(MaterialPageRoute(builder: (ctx) => HomePage()));
     } else {
       print('some error occured');
     }
   }
+ 
 }

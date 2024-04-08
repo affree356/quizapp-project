@@ -1,11 +1,31 @@
+
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:quiz_app/functions/db_functions.dart';
+import 'package:quiz_app/model/user_model.dart';
 import 'package:quiz_app/pages/category.dart';
+import 'package:quiz_app/pages/history.dart';
 import 'package:quiz_app/pages/levels.dart';
+import 'package:quiz_app/pages/profile.dart';
 import 'package:quiz_app/screens/info.dart';
 
-class homePage extends StatelessWidget {
-  const homePage({super.key});
+class HomePage extends StatefulWidget {
+// final UserModel usermodel;
+   HomePage({super.key,});
+
+  @override
+  State<HomePage> createState() => _homePageState();
+}
+
+class _homePageState extends State<HomePage> {
+  int currentSelectedIndex =0;
+
+  //  final _pages =[
+  //   homePage(),
+  //   HistoryPage(),
+  //   ProfilePage()
+  //  ];
 
   @override
   Widget build(BuildContext context) {
@@ -41,10 +61,13 @@ class homePage extends StatelessWidget {
               ),
             ),
           ),
-          body: Container(
+          body:
+
+           Container(
             height: double.infinity,
             width: double.infinity,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
+              // color: Color.fromARGB(255, 10, 147, 118)
               gradient: LinearGradient(
                 colors: [
                   Color(0xffB81736),
@@ -56,7 +79,7 @@ class homePage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(top: 50, left: 30),
+                  padding:  EdgeInsets.only(top: 50, left: 30),
                   child: Builder(builder: (context) {
                     return GestureDetector(
                       onTap: () {
@@ -65,52 +88,59 @@ class homePage extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.menu,
-                            size: 50,
+                            size: 30,
                             color: Colors.white,
                           ),
                           Padding(
                             padding: const EdgeInsets.only(right: 20, top: 10),
-                            child: Container(
-                                decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.grey),
-                                    borderRadius: BorderRadius.circular(40)),
-                                child: Icon(
-                                  Icons.person,
-                                  color: Colors.grey,
-                                  size: 60,
-                                )),
+                            child: GestureDetector(
+                              onTap: () async{
+                                await getUser();
+                                Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>ProfilePage(id: FirebaseAuth.instance.currentUser!.uid ,)));
+                              },
+                              child: Image(image: AssetImage('assets/user-removebg-preview 1 (1).png'),height: 50,)),
                           )
                         ],
                       ),
                     );
                   }),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 20, left: 30),
+                const Padding(
+                  padding: EdgeInsets.only(top: 20, left: 30),
                   child: Text(
                     "Let's Play Quiz",
-                    style: TextStyle(fontSize: 30, color: Colors.amber),
+                    style: TextStyle(fontSize: 30, color: Colors.white,fontWeight: FontWeight.bold),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(
+                 const Padding(
+                  padding: EdgeInsets.only(
                     top: 20,
                   ),
                   child: TabBar(
                     tabs: [
                       Tab(
-                        child: Text(
-                          'Levels',
-                          style: TextStyle(
-                              fontSize: 25, fontWeight: FontWeight.bold),
+                        child: Card(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 20,),
+                            child: Text(
+                              'Levels',
+                              style: TextStyle(
+                                  fontSize: 25, fontWeight: FontWeight.bold),
+                            ),
+                          ),
                         ),
                       ),
-                      Tab(
-                        child: Text('Category',
-                            style: TextStyle(
-                                fontSize: 25, fontWeight: FontWeight.bold)),
+                    Tab(
+                        child: Card(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 10,),
+                            child: Text('Category',
+                                style: TextStyle(
+                                    fontSize: 25, fontWeight: FontWeight.bold)),
+                          ),
+                        ),
                       ),
                     ],
                     labelColor:
@@ -121,10 +151,37 @@ class homePage extends StatelessWidget {
                   ),
                 ),
                 Expanded(
-                    child: TabBarView(children: [levelPage(), userCategory()]))
+                    child: TabBarView(children: [
+                      const LevelPage(), 
+                      UserCategory()]))
               ],
             ),
-          )),
+            
+          ),
+         bottomNavigationBar: CurvedNavigationBar(
+          backgroundColor:  Color(0xffB81736),
+          animationDuration: Duration(milliseconds: 300),
+          items: [
+          Icon(Icons.home,size: 30,
+          ),
+          Icon(Icons.history,size: 30,),
+          Icon(Icons.person,size: 30,),
+         ],index:currentSelectedIndex ,
+         onTap: (newIndex) {
+           setState(() {
+             currentSelectedIndex=newIndex;
+             if(newIndex==0){
+              Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>HomePage()));
+             }else if(newIndex==1){
+              Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>HistoryPage()));
+             }else if(newIndex==2){
+               Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>ProfilePage(id:FirebaseAuth.instance.currentUser!.uid,)));
+             }
+           });
+         },
+         ),
+          ),
     );
   }
 }
+
