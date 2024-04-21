@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quiz_app/pages/home_page.dart';
+import 'package:quiz_app/pages/leaderboards.dart';
 
 // ignore: must_be_immutable
 class Resultpage extends StatelessWidget {
@@ -105,9 +106,14 @@ class Resultpage extends StatelessWidget {
                           blurRadius: 3, spreadRadius: 2, color: Colors.black26)
                     ]),
                 child: Center(
-                  child: Text(
-                    'Leaderboards',
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>Leaderboardpage()));
+                    },
+                    child: Text(
+                      'Leaderboards',
+                      style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
+                    ),
                   ),
                 ),
               ),

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:quiz_app/functions/database_functions.dart';
 import 'package:quiz_app/model/question_model.dart';
 import 'package:quiz_app/screens/admin/question_list.dart';
+import 'package:quiz_app/widgets/snackbar.dart';
 
 
 class questionedit extends StatefulWidget {
@@ -398,8 +399,10 @@ class _questioneditState extends State<questionedit> {
           category: category,
           levels: level!);
       await updateQuiz(questions, id);
-       ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.green, 
-         content: Text(' update successfully')));
+      customSnackBar(context,
+       'update successfully',
+        Colors.green);
+        Navigator.of(context).pop();
     }
   }
 }

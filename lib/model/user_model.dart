@@ -14,19 +14,19 @@ class UserModel {
   @HiveField(4)
   final String question;
   @HiveField(5)
-  final List<String> correctAnswerIndex;
-  @HiveField(6)
-  final List<String> wrongAnswerIndex;
+  final Set<String> correctAnswerIndex;
   @HiveField(7)
-  final int score;
+  int score;
   @HiveField(8)
   int? id;
 
-  UserModel({required this.username, required this.gmail, required this.age, required this.question, required this.correctAnswerIndex, required this.wrongAnswerIndex, required this.score,required this.firebaseId});
-
- 
-
-  
-
- 
+  UserModel(
+      {required this.firebaseId,
+      required this.username,
+      required this.gmail,
+      required this.age,
+      required this.question,
+      required this.correctAnswerIndex,
+      required this.score,
+      this.id});
 }

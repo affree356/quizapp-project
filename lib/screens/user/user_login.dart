@@ -1,7 +1,11 @@
 
 
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:quiz_app/functions/db_functions.dart';
+import 'package:quiz_app/model/sharedclass.dart';
 
 
 import 'package:quiz_app/pages/home_page.dart';
@@ -178,6 +182,13 @@ class _userLoginState extends State<userLogin> {
 
     if (user != null) {
       print('user is successfully signedin');
+      log(usernameContoller.text);
+        // questionListNotifier.value.clear();
+      SharedPref.sharedprefset(usernameContoller.text, email);
+      
+        SharedPref().sharedisntancefucniton();
+            
+      log(SharedPref().sharedInstanceUSer);
       Navigator.of(context)
           .push(MaterialPageRoute(builder: (ctx) => HomePage()));
          

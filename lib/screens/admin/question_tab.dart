@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:quiz_app/functions/database_functions.dart';
 import 'package:quiz_app/screens/admin/edit.question.dart';
 import 'package:quiz_app/screens/admin/question_list.dart';
+import 'package:quiz_app/widgets/text.dart';
 
 class QuestionDetails extends StatefulWidget {
   final String question;
@@ -61,8 +62,19 @@ class _QuestionDetails extends State<QuestionDetails> {
                                       if (!snapshot.hasData) {
                                         return CupertinoActivityIndicator();
                                       } else {
-                                        return Text(
-                                          snapshot.data!['name'],
+                                        return Row(
+                                          children: [
+                                            
+                                              IconButton(onPressed: (){
+                                                Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>QuestionList()));
+                                              }, icon: Icon(Icons.arrow_back_ios)),
+                                            Padding(
+                                              padding: const EdgeInsets.only(left: 80),
+                                              child: styledText(
+                                                snapshot.data!['name'],
+                                              )
+                                            ),
+                                          ],
                                         );
                                       }
                                     }),

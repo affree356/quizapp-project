@@ -1,12 +1,15 @@
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz_app/functions/db_functions.dart';
+import 'package:quiz_app/model/sharedclass.dart';
 import 'package:quiz_app/model/user_model.dart';
 import 'package:quiz_app/pages/home_page.dart';
+import 'package:quiz_app/screens/user/user_login.dart';
 import 'package:quiz_app/user_auth/firebase_auth.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:quiz_app/widgets/text.dart';
 
 class SignUpscreen extends StatefulWidget {
   SignUpscreen({super.key});
@@ -201,15 +204,17 @@ class _SignUpscreenState extends State<SignUpscreen> {
                               colors: [Color(0xffB81736), Color(0xff281537)])),
                       child: ElevatedButton(
                         onPressed: () {
-                          signUp(UserModel(
+                          if(_key.currentState!.validate()){
+                             signUp(UserModel(
                               firebaseId: '',
                               username: usernameController.text,
                               gmail: emailController.text,
                               age: '',
                               question: '',
-                              correctAnswerIndex: [],
-                              wrongAnswerIndex: [],
+                              correctAnswerIndex: {},
                               score: 0));
+                          }
+                         
                         },
                         child: const Text(
                           'SIGN UP',
@@ -235,15 +240,12 @@ class _SignUpscreenState extends State<SignUpscreen> {
                     GestureDetector(
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (ctx) => SignUpscreen()));
+                              builder: (ctx) =>userLogin()));
                         },
-                        child: Text(
-                          'Sign in',
-                          style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.blue),
-                        ))
+                        child: styledText('Sign in',
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                        Color: Colors.blue))
                   ],
                 ),
               ),
@@ -262,24 +264,39 @@ class _SignUpscreenState extends State<SignUpscreen> {
 
     User? user = await _auth.signUpWithEmailandPass(email, pass);
     if (user != null) {
+      firebsaeUserStore(username, email);
+      // SharedPref.sharedprefset(username, email);
       final newUser = UserModel(
           firebaseId: FirebaseAuth.instance.currentUser!.uid,
           username: username,
           gmail: email,
           age: '',
           question: '',
-          correctAnswerIndex: [],
-          wrongAnswerIndex: [],
+          correctAnswerIndex: {},
           score: 0);
       await addUser(newUser);
       //   final _sharedprefs = await SharedPreferences.getInstance();
       //   final userloggedin = _sharedprefs.setString('user_login', user.uid);
       // print('user is successfully created');
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (ctx) => HomePage()));
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx)=>HomePage()));
     } else {
       print('some error occured');
     }
   }
- 
+}
+
+
+// ------------------------------------------
+// to store users credentinals in firebase
+// ------------------------------------------
+
+firebsaeUserStore(String username, String email) async {
+  //  final fdata = await FirebaseFirestore.instance
+  //     .collection('users')
+  //     .where('mail', isEqualTo: email)
+  //     .get();
+
+  FirebaseFirestore.instance
+      .collection('users')
+      .add({' username': username, 'mail': email, 'score': 0});
 }

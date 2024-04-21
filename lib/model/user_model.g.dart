@@ -17,21 +17,21 @@ class UserModelAdapter extends TypeAdapter<UserModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return UserModel(
+      firebaseId: fields[0] as String?,
       username: fields[1] as String,
       gmail: fields[2] as String,
       age: fields[3] as String,
       question: fields[4] as String,
-      correctAnswerIndex: (fields[5] as List).cast<String>(),
-      wrongAnswerIndex: (fields[6] as List).cast<String>(),
+      correctAnswerIndex: (fields[5] as List).toSet().cast<String>(),
       score: fields[7] as int,
-      firebaseId: fields[0] as String?,
-    )..id = fields[8] as int?;
+      id: fields[8] as int?,
+    );
   }
 
   @override
   void write(BinaryWriter writer, UserModel obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.firebaseId)
       ..writeByte(1)
@@ -43,9 +43,7 @@ class UserModelAdapter extends TypeAdapter<UserModel> {
       ..writeByte(4)
       ..write(obj.question)
       ..writeByte(5)
-      ..write(obj.correctAnswerIndex)
-      ..writeByte(6)
-      ..write(obj.wrongAnswerIndex)
+      ..write(obj.correctAnswerIndex.toList())
       ..writeByte(7)
       ..write(obj.score)
       ..writeByte(8)

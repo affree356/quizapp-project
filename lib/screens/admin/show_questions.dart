@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz_app/functions/database_functions.dart';
+import 'package:quiz_app/screens/admin/admin_page.dart';
 import 'package:quiz_app/screens/admin/edit.question.dart';
 import 'package:quiz_app/screens/admin/question_list.dart';
 
@@ -56,8 +57,19 @@ class _ShowQuestionsState extends State<ShowQuestions> {
                                       } else {
                                         return Padding(
                                           padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            snapshot.data!['name'],style: TextStyle(fontSize: 23,fontWeight: FontWeight.w600),
+                                          child: Row(
+                                           
+                                            children: [
+                                              IconButton(onPressed: (){
+                                             Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>QuestionList()));
+                                              }, icon: Icon(Icons.arrow_back_ios)),
+                                              Padding(
+                                                padding: const EdgeInsets.only(left: 100,),
+                                                child: Text(
+                                                  snapshot.data!['name'],style: TextStyle(fontSize: 23,fontWeight: FontWeight.w600),
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         );
 

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:quiz_app/widgets/snackbar.dart';
 
 class categoryEdit extends StatefulWidget {
   final String id;
@@ -82,6 +83,8 @@ class _categoryEditState extends State<categoryEdit> {
         .collection('category_db')
         .doc(widget.id)
         .update({'name': newCategoryName});
-       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Category updated successfully')));
+       customSnackBar(context,
+        'Category addedd successfully', 
+        Colors.green);
   }
 }

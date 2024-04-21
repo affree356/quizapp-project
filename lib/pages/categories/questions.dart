@@ -1,12 +1,10 @@
 import 'dart:async';
-
+import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:flutter/cupertino.dart';
-
 import 'package:flutter/material.dart';
 import 'package:quiz_app/functions/db_functions.dart';
-import 'package:quiz_app/model/user_model.dart';
+import 'package:quiz_app/model/sharedclass.dart';
 import 'package:quiz_app/pages/result_page.dart';
 
 class Questions extends StatefulWidget {
@@ -31,9 +29,9 @@ class _QuestionsState extends State<Questions> {
   int timer = 30;
   String showtimer = "30";
   bool canceltimer = false;
-  late int wronganswer;
-  late int correctAnswer;
-  late String questions;
+  // late int wronganswer;
+  // late int correctAnswer;
+  // late String questions;
 
   @override
   void initState() {
@@ -48,18 +46,32 @@ class _QuestionsState extends State<Questions> {
     const onesec = Duration(seconds: 1);
     Timer.periodic(onesec, (Timer t) {
       setState(() {
+        
         if (timer < 1) {
           t.cancel();
-          if (selectedOptionIndex == null) {
-            colorsToShow[selectedOptionIndex!] = iswrong;
-            _pageController.nextPage(
+          _pageController.nextPage(
               duration: const Duration(milliseconds: 600),
               curve: Curves.ease,
             );
+
+            showtimer = "30";
+            starttimer();
+             if(currentpageIndex==numberOfQuestions-1){
+              t.cancel();
+            Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>Resultpage(score: score)));
+          return ;
           }
+          // if (selectedOptionIndex == null) {
+          //   colorsToShow[selectedOptionIndex!] = iswrong;
+          //   _pageController.nextPage(
+          //     duration: const Duration(milliseconds: 600),
+          //     curve: Curves.ease,
+          //   );
+          // }
           canceltimer = false;
           timer = 30;
-          starttimer();
+          
+          // starttimer();
         } else if (canceltimer == true) {
           t.cancel();
         } else {
@@ -95,7 +107,7 @@ class _QuestionsState extends State<Questions> {
                     final quizsnap = snapshot.data!.docs[index];
                     final List<dynamic> options = quizsnap['options'];
                     final int correctAnswer = quizsnap['correctanswer'];
-                    final questions =quizsnap.id;
+                    // final questions =quizsnap.id;
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
@@ -119,18 +131,22 @@ class _QuestionsState extends State<Questions> {
                                         .doc(quizsnap['category'])
                                         .snapshots(),
                                     builder: (context, AsyncSnapshot snapshot) {
-                                      return Padding(
-                                        padding: const EdgeInsets.only(
-                                            top: 20, left: 120),
-                                        child: Text(
-                                          snapshot.data['name'],
-                                          style: TextStyle(
-                                              fontSize: 30,
-                                              color: Color.fromARGB(
-                                                  255, 216, 164, 10),
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      );
+                                      if (!snapshot.hasData) {
+                                        return CupertinoActivityIndicator();
+                                      } else {
+                                        return Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 20, left: 120),
+                                          child: Text(
+                                            snapshot.data['name'],
+                                            style: TextStyle(
+                                                fontSize: 30,
+                                                color: Color.fromARGB(
+                                                    255, 216, 164, 10),
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        );
+                                      }
                                     }),
                               ),
                               Padding(
@@ -158,11 +174,20 @@ class _QuestionsState extends State<Questions> {
                                       child: Padding(
                                         padding: const EdgeInsets.all(10),
                                         child: Center(
-                                          child: Text(
-                                            quizsnap['question'],
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w500,
-                                                color: Colors.black),
+                                          child: Column(
+                                            children: [
+                                              Text(' ${index+1}/${numberOfQuestions}',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500),),
+                                              Padding(
+                                                padding: const EdgeInsets.only(top: 20,),
+                                                child: Text(
+                                                  quizsnap['question'],
+                                                  style: TextStyle(
+                                                    fontSize: 18,
+                                                      fontWeight: FontWeight.w500,
+                                                      color: Colors.black),
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       )),
@@ -200,12 +225,19 @@ class _QuestionsState extends State<Questions> {
                                               selectedOptionIndex = index;
                                               if (selectedOptionIndex ==
                                                   correctAnswer) {
-                                                // Add the if statement here
+                                               
                                                 colorsToShow[correctAnswer] =
                                                     istrue;
                                                 score += 5;
-                                                addScore();
+                                                // addScore();
+                                                log('if entedere +5');
+                                                updatescore();
+                                                updatescorefb();
+                                                // saveCorrectAnswer(quizsnap.id); 
+                                                firebasehistory(quizsnap.id);
                                               } else {
+                                                log('if entedered nothing');
+
                                                 colorsToShow[
                                                         selectedOptionIndex!] =
                                                     iswrong;
@@ -218,7 +250,7 @@ class _QuestionsState extends State<Questions> {
 
                                             await Future.delayed(
                                                 const Duration(seconds: 2));
-                                            setState(() async {
+                                            setState(()  {
                                               canceltimer = true;
                                               Timer(Duration(seconds: 0),
                                                   () async {
@@ -287,17 +319,23 @@ class _QuestionsState extends State<Questions> {
     );
   }
 
-  void addScore() {
-   final data = UserModel(
-        username: '',
-        gmail: '',
-        age: '',
-        question: questions,
-        correctAnswerIndex: [],
-        wrongAnswerIndex: [],
-        score: score,
-        firebaseId: '');
+}
 
-        AddScore(data);
-  }
+// ------------------------------------------
+// to update scroes of user in firebase firestore
+// ------------------------------------------
+updatescorefb() async {
+// for refeence of current data to update
+  final QuerySnapshot<Map<String, dynamic>> data = await FirebaseFirestore
+      .instance
+      .collection('users')
+      .where('mail', isEqualTo: SharedPref().sharedInstanceUSer)
+      .get();
+
+  FirebaseFirestore.instance
+      .collection('users')
+      .doc(data.docs.first.id)
+      .update({
+    'score': data.docs.first['score'] + 5,
+  });
 }

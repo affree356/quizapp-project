@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:quiz_app/model/sharedclass.dart';
 import 'package:quiz_app/pages/home_page.dart';
 import 'package:quiz_app/screens/admin/admin_page.dart';
 import 'package:quiz_app/screens/info.dart';
@@ -16,11 +19,14 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     checkAdminloggedIn(context);
+   SharedPref().sharedisntancefucniton();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+     
+    log(SharedPref().sharedInstanceUSer);
     return Scaffold(
       body: Container(
         height: double.infinity,

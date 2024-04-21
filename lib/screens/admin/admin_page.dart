@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:quiz_app/screens/admin/category_tab.dart';
 import 'package:quiz_app/screens/admin/question_list.dart';
-
-import 'package:quiz_app/screens/info.dart';
+import 'package:quiz_app/widgets/alertdialogue.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -53,22 +52,7 @@ class AdminPage extends StatelessWidget {
       showDialog(
         context: context,
         builder: (ctx1) {
-          return AlertDialog(
-            title: const Text('Logout'),
-            content: const Text('Do you want to exit the app'),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                     Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx)=>const infoScreen()), (route) => false);
-                  },
-                  child: const Text('yes')),
-              TextButton(
-                  onPressed: () {
-                    Navigator.of(ctx1).pop();
-                  },
-                  child: const Text('No'))
-            ],
-          );
+          return buildAlertDialog(context);
         });
     
   }

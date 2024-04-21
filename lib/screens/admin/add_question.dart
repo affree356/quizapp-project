@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:quiz_app/functions/database_functions.dart';
 import 'package:quiz_app/model/question_model.dart';
+import 'package:quiz_app/widgets/snackbar.dart';
+import 'package:quiz_app/widgets/textfield.dart';
 
 class AddQuestionPage extends StatefulWidget {
   const AddQuestionPage({super.key});
@@ -26,7 +28,7 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
   String category = '';
   final TextEditingController op4Controller = TextEditingController();
   final TextEditingController ansController = TextEditingController();
-  final _formkey = GlobalKey<FormState>();
+  final formkey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,320 +44,359 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
         backgroundColor: const Color.fromARGB(255, 25, 24, 24),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Padding(
-              padding: EdgeInsets.all(20.0),
-              child: Text(
-                'Add Quiz',
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 15,
-              ),
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                    color: const Color(0xFFececF8),
-                    borderRadius: BorderRadius.circular(10)),
-                child: TextField(
-                  controller: qController,
-                  decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      hintText: "   Enter a Question",
-                      hintStyle: TextStyle(
-                        color: Colors.black,
-                        fontSize: 18,
-                      )),
+        child: Form(
+          key: formkey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Padding(
+                padding: EdgeInsets.all(20.0),
+                child: Text(
+                  'Add Quiz',
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                 ),
               ),
-            ),
-            const Padding(
-              padding: EdgeInsets.all(20.0),
-              child: Text(
-                'Option 1',
-                style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 15,
-              ),
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                    color: const Color(0xFFececF8),
-                    borderRadius: BorderRadius.circular(10)),
-                child: TextField(
-                  controller: op1Controller,
-                  decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      hintText: "   Enter Option 1",
-                      hintStyle: TextStyle(
-                        color: Colors.black,
-                        fontSize: 18,
-                      )),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 15,
+                ),
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                      color: const Color(0xFFececF8),
+                      borderRadius: BorderRadius.circular(10)),
+                  child: customTextfield(controller: qController,
+                   keyboardTYpe: TextInputType.name, 
+                   labelText: 'Enter a question',
+                   
+                    validator: (value){
+                      if(value!.isEmpty){
+                        return 'Fill the question';
+                      }else{
+                        return null;
+                      }
+                    }, 
+                    autovalidateMode: AutovalidateMode.onUserInteraction)
                 ),
               ),
-            ),
-            const Padding(
-              padding: EdgeInsets.all(20.0),
-              child: Text(
-                'Option 2',
-                style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 15,
-              ),
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                    color: const Color(0xFFececF8),
-                    borderRadius: BorderRadius.circular(10)),
-                child: TextField(
-                  controller: op2Controller,
-                  decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      hintText: "   Enter Option 2",
-                      hintStyle: TextStyle(
-                        color: Colors.black,
-                        fontSize: 18,
-                      )),
+              const Padding(
+                padding: EdgeInsets.all(20.0),
+                child: Text(
+                  'Option 1',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20),
                 ),
               ),
-            ),
-            const Padding(
-              padding: EdgeInsets.all(20.0),
-              child: Text(
-                'Option 3',
-                style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 15,
-              ),
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                    color: const Color(0xFFececF8),
-                    borderRadius: BorderRadius.circular(10)),
-                child: TextField(
-                  controller: op3Controller,
-                  decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      hintText: "   Enter Option 3",
-                      hintStyle: TextStyle(
-                        color: Colors.black,
-                        fontSize: 18,
-                      )),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 15,
+                ),
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                      color: const Color(0xFFececF8),
+                      borderRadius: BorderRadius.circular(10)),
+                  child: customTextfield(controller: qController,
+                   keyboardTYpe: TextInputType.name, 
+                   labelText: 'Enter option 1',
+                   
+                    validator: (value){
+                      if(value!.isEmpty){
+                        return 'please fill the field';
+                      }else{
+                        return null;
+                      }
+                    }, 
+                    autovalidateMode: AutovalidateMode.onUserInteraction)
                 ),
               ),
-            ),
-            const Padding(
-              padding: EdgeInsets.all(20.0),
-              child: Text(
-                'Option 4',
-                style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 15,
-              ),
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                    color: const Color(0xFFececF8),
-                    borderRadius: BorderRadius.circular(10)),
-                child: TextField(
-                  controller: op4Controller,
-                  decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      hintText: "   Enter Option 4",
-                      hintStyle: TextStyle(
-                        color: Colors.black,
-                        fontSize: 18,
-                      )),
+              const Padding(
+                padding: EdgeInsets.all(20.0),
+                child: Text(
+                  'Option 2',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20),
                 ),
               ),
-            ),
-            const Padding(
-              padding: EdgeInsets.all(20.0),
-              child: Text(
-                'Correct answer',
-                style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 15,
-              ),
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                    color: const Color(0xFFececF8),
-                    borderRadius: BorderRadius.circular(10)),
-                child: TextFormField(
-                  key: _formkey,
-                  keyboardType: TextInputType.number,
-                  inputFormatters: <TextInputFormatter>[
-              FilteringTextInputFormatter.digitsOnly
-            ], 
-                  controller: ansController,
-                  decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      hintText: "   Enter correct answer",
-                      hintStyle: TextStyle(
-                        color: Colors.black,
-                        fontSize: 18,
-                      )),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Please enter correct answer';
-                    }else if(int.parse(value)<0||int.parse(value)>4){
-                      return 'value must be betweel 0 and 3';
-                    }
-                    
-                    return null;
-                  },
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 15,
+                ),
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                      color: const Color(0xFFececF8),
+                      borderRadius: BorderRadius.circular(10)),
+                  child: customTextfield(
+                    controller: op2Controller,
+                   keyboardTYpe: TextInputType.name, 
+                   labelText: 'Enter option 2',
+                   
+                    validator: (value){
+                      if(value!.isEmpty){
+                        return 'Fill the field';
+                      }else{
+                        return null;
+                      }
+                    }, 
+                    autovalidateMode: AutovalidateMode.onUserInteraction)
                 ),
               ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Container(
-                decoration: BoxDecoration(
-                    color: const Color(0xFFececF8),
-                    borderRadius: BorderRadius.circular(10)),
-                child: DropdownButtonFormField(
-                    hint: const Text(
-                      '   Choose level',
-                      style: TextStyle(
+              const Padding(
+                padding: EdgeInsets.all(20.0),
+                child: Text(
+                  'Option 3',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 15,
+                ),
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                      color: const Color(0xFFececF8),
+                      borderRadius: BorderRadius.circular(10)),
+                  child:customTextfield(
+                    controller: op3Controller,
+                   keyboardTYpe: TextInputType.name, 
+                   labelText: 'Enter option 3',
+                   
+                    validator: (value){
+                      if(value!.isEmpty){
+                        return 'Fill the field';
+                      }else{
+                        return null;
+                      }
+                    }, 
+                    autovalidateMode: AutovalidateMode.onUserInteraction)
+                ),
+                
+              ),
+              const Padding(
+                padding: EdgeInsets.all(20.0),
+                child: Text(
+                  'Option 4',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 15,
+                ),
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                      color: const Color(0xFFececF8),
+                      borderRadius: BorderRadius.circular(10)),
+                  child: customTextfield(
+                    controller: op4Controller,
+                   keyboardTYpe: TextInputType.number, 
+                   labelText: 'Enter option 4',
+                   
+                    validator: (value){
+                      if(value!.isEmpty){
+                        return 'Fill the field';
+                      }else{
+                        return null;
+                      }
+                    }, 
+                    autovalidateMode: AutovalidateMode.onUserInteraction)
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.all(20.0),
+                child: Text(
+                  'Correct answer',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 15,
+                ),
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                      color: const Color(0xFFececF8),
+                      borderRadius: BorderRadius.circular(10)),
+                  child: TextFormField(
+                   
+                    keyboardType: TextInputType.number,
+                    inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.digitsOnly
+              ], 
+                    controller: ansController,
+                    decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "   Enter correct answer",
+                        hintStyle: TextStyle(
                           color: Colors.black,
-                          fontSize: 20,
+                          fontSize: 18,
+                        )),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please enter correct answer';
+                      }else if(int.parse(value)<0||int.parse(value)>4){
+                        return 'value must be betweel 0 and 3';
+                      }
+                      
+                      return null;
+                    },
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: const Color(0xFFececF8),
+                      borderRadius: BorderRadius.circular(10)),
+                  child: DropdownButtonFormField(
+                      hint: const Text(
+                        '   Choose level',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      onChanged: (value) {
+                        setState(() {
+                          level = value;
+                        });
+                      },
+                      icon: const Icon(
+                        Icons.arrow_drop_down,
+                        color: Colors.black,
+                      ),
+                      items: _levels.map((e) {
+                        return DropdownMenuItem(value: e, child: Text(e));
+                      }).toList(),
+                      validator: (value){
+                        if(value!.isEmpty){
+                          return 'please choose level';
+                        }else{
+                          return null;
+                        }
+                      },
+                      ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: const Color(0xFFececF8),
+                      border: Border.all(color: Colors.white),
+                      borderRadius: BorderRadius.circular(10)),
+                  child: StreamBuilder(
+                      stream: FirebaseFirestore.instance
+                          .collection('category_db')
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          return const CupertinoActivityIndicator();
+                        } else {
+                          return DropdownButtonFormField(
+                              hint: category.isEmpty?Text('Select a category'):StreamBuilder(
+                                  stream: FirebaseFirestore.instance
+                                      .collection('category_db')
+                                      .doc(category)
+                                      .snapshots(),
+                                  builder: (context, snapshot) {
+                                    if (!snapshot.hasData) {
+                                      return const Text('Category');
+                                    } else {
+                                      return Text(snapshot.data!['name']);
+                                    }
+                                  }),
+                              items: List.generate(snapshot.data!.docs.length,
+                                  (index) {
+                                // final docId = snapshot.data!.docs[index].id;
+                                return DropdownMenuItem(
+                                  value: snapshot.data!.docs[index].id,
+                                  child: Text(
+                                      snapshot.data!.docs[index]['name']),
+                                );
+                              }),
+                              onChanged: (value) {
+                                setState(() {
+                                  category = value!;
+                                });
+                                
+                              },validator: (value) {
+                                if(value!.isEmpty){
+                                  return ' choose a category';
+                                }else{
+                                  return null;
+                                }
+                              },
+                              
+                              );
+                        }
+                      }),
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 270),
+                child: Container(
+                  width: 100,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if(formkey.currentState!.validate()){
+                         uploaditem();
+                      Navigator.of(context).pop();
+                      }
+                     
+                    },
+                    child: const Text(
+                      'Upload',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
                           fontWeight: FontWeight.bold),
                     ),
-                    onChanged: (value) {
-                      setState(() {
-                        level = value;
-                      });
-                    },
-                    icon: const Icon(
-                      Icons.arrow_drop_down,
-                      color: Colors.black,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.black,
                     ),
-                    items: _levels.map((e) {
-                      return DropdownMenuItem(value: e, child: Text(e));
-                    }).toList()),
-              ),
-            ),
-            const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Container(
-                decoration: BoxDecoration(
-                    color: const Color(0xFFececF8),
-                    border: Border.all(color: Colors.white),
-                    borderRadius: BorderRadius.circular(10)),
-                child: StreamBuilder(
-                    stream: FirebaseFirestore.instance
-                        .collection('category_db')
-                        .snapshots(),
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData) {
-                        return const CupertinoActivityIndicator();
-                      } else {
-                        return DropdownButton(
-                            hint: category.isEmpty?Text('Select a category'):StreamBuilder(
-                                stream: FirebaseFirestore.instance
-                                    .collection('category_db')
-                                    .doc(category)
-                                    .snapshots(),
-                                builder: (context, snapshot) {
-                                  if (!snapshot.hasData) {
-                                    return const Text('Category');
-                                  } else {
-                                    return Text(snapshot.data!['name']);
-                                  }
-                                }),
-                            items: List.generate(snapshot.data!.docs.length,
-                                (index) {
-                              // final docId = snapshot.data!.docs[index].id;
-                              return DropdownMenuItem(
-                                value: snapshot.data!.docs[index].id,
-                                child: Text(
-                                    snapshot.data!.docs[index]['name']),
-                              );
-                            }),
-                            onChanged: (value) {
-                              setState(() {
-                                category = value!;
-                              });
-                            });
-                      }
-                    }),
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 270),
-              child: Container(
-                width: 100,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: ElevatedButton(
-                  onPressed: () {
-                    uploaditem();
-                  },
-                  child: const Text(
-                    'Upload',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black,
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
   uploaditem() async {
-    if (qController.text.isNotEmpty &&
+    if(formkey.currentState!.validate()){
+if (qController.text.isNotEmpty &&
         op1Controller.text.isNotEmpty &&
         op2Controller.text.isNotEmpty &&
         op3Controller.text.isNotEmpty &&
@@ -374,12 +415,11 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
           category: category,
           levels: level!);
       addQuiz(data);
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          backgroundColor: Colors.green,
-          content: Text(
-            'Added successfully',
-            style: TextStyle(fontSize: 18),
-          )));
+      customSnackBar(context,
+       'Added successfully', 
+       Colors.green);
     }
   }
+    }
+    
 }
