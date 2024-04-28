@@ -1,24 +1,27 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
-
 import 'package:flutter/material.dart';
 import 'package:quiz_app/functions/database_functions.dart';
 import 'package:quiz_app/model/question_model.dart';
-import 'package:quiz_app/screens/admin/question_list.dart';
 import 'package:quiz_app/widgets/snackbar.dart';
 
 
-class questionedit extends StatefulWidget {
+class Questionedit extends StatefulWidget {
+    
   final String id;
-  questionedit({super.key, required this.id});
+  const Questionedit({super.key, required this.id});
 
   @override
-  State<questionedit> createState() => _questioneditState();
+  State<Questionedit> createState() => _questioneditState();
 }
 
-class _questioneditState extends State<questionedit> {
+// ignore: camel_case_types
+class _questioneditState extends State<Questionedit> {
   final CollectionReference quiz =
       FirebaseFirestore.instance.collection('category_db');
+      ValueNotifier<String> leve1 = ValueNotifier<String>('');
   String? value;
   final List<String> _levels = ["Easy", 'Medium', 'Hard'];
   String? level;
@@ -38,9 +41,10 @@ class _questioneditState extends State<questionedit> {
         appBar: AppBar(
           leading: GestureDetector(
             onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>const QuestionList()));
+              // Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>const QuestionList()));
+              Navigator.of(context).pop();
             },
-            child:const Icon(
+            child: const Icon(
               Icons.arrow_back,
               color: Colors.white,
             ),
@@ -54,7 +58,7 @@ class _questioneditState extends State<questionedit> {
                 .snapshots(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
-                return CupertinoActivityIndicator();
+                return const CupertinoActivityIndicator();
               } else {
                 qController.text = snapshot.data!['question'];
                 op1Controller.text = snapshot.data!['options'][0];
@@ -62,7 +66,7 @@ class _questioneditState extends State<questionedit> {
                 op3Controller.text = snapshot.data!['options'][2];
                 op4Controller.text = snapshot.data!['options'][3];
                 ansController.text = snapshot.data!['correctanswer'].toString();
-                level = snapshot.data!['levels'];
+                leve1.value =snapshot.data!['levels'];
                 category = snapshot.data!['category'];
                 return SingleChildScrollView(
                     child: Column(
@@ -263,27 +267,32 @@ class _questioneditState extends State<questionedit> {
                         decoration: BoxDecoration(
                             color: const Color(0xFFececF8),
                             borderRadius: BorderRadius.circular(10)),
-                        child: DropdownButtonFormField(
-                            value: level,
-                            hint: const Text(
-                              '   Choose level',
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            onChanged: (value) {
-                              setState(() {
-                                level = value;
-                              });
-                            },
-                            icon: const Icon(
-                              Icons.arrow_drop_down,
-                              color: Colors.black,
-                            ),
-                            items: _levels.map((e) {
-                              return DropdownMenuItem(value: e, child: Text(e));
-                            }).toList()),
+                        child: ValueListenableBuilder(
+                          valueListenable: leve1,
+                          builder: (context, valuelev, child) {
+                             return DropdownButtonFormField(
+                                  value: valuelev,
+                                  hint: const Text(
+                                    '   Choose level',
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                              
+                                  onChanged: (value) {
+                                   leve1.value=value.toString();
+                                  },
+                                  icon: const Icon(
+                                    Icons.arrow_drop_down,
+                                    color: Colors.black,
+                                  ),
+                                  items: _levels.map((e) {
+                                    return DropdownMenuItem(value: e, child: Text(e));
+                                  }).toList());
+                          },
+                       
+                        ),
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -312,8 +321,7 @@ class _questioneditState extends State<questionedit> {
                                           if (!snapshot.hasData) {
                                             return const Text('Category');
                                           } else {
-                                            return Text(
-                                                snapshot.data!['name']);
+                                            return Text(snapshot.data!['name']);
                                           }
                                         }),
                                     items: List.generate(
@@ -321,8 +329,8 @@ class _questioneditState extends State<questionedit> {
                                       // final docId = snapshot.data!.docs[index].id;
                                       return DropdownMenuItem(
                                         value: snapshot.data!.docs[index].id,
-                                        child: Text(snapshot.data!.docs[index]
-                                            ['name']),
+                                        child: Text(
+                                            snapshot.data!.docs[index]['name']),
                                       );
                                     }),
                                     onChanged: (value) {
@@ -346,18 +354,17 @@ class _questioneditState extends State<questionedit> {
                         ),
                         child: ElevatedButton(
                           onPressed: () {
-                            updateQuestions(widget.id);
-                             
+                            updateQuestions(widget.id,);
                           },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.black,
+                          ),
                           child: const Text(
                             'Update',
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.black,
                           ),
                         ),
                       ),
@@ -368,7 +375,8 @@ class _questioneditState extends State<questionedit> {
             }));
   }
 
-  void updateQuestions(String id) async {
+  void updateQuestions(String id,) async {
+    log(">>>>>>>>>>>>>>>>>>>>${leve1.value}");
     final question = qController.text;
     final option1 = op1Controller.text;
     final option2 = op2Controller.text;
@@ -384,6 +392,7 @@ class _questioneditState extends State<questionedit> {
         correctanswer.isEmpty) {
       return;
     } else {
+      // ignore: no_leading_underscores_for_local_identifiers
       List<String> _options = [];
       _options.addAll([
         op1Controller.text,
@@ -397,12 +406,13 @@ class _questioneditState extends State<questionedit> {
           options: _options,
           correctanswerIndex: int.parse(correctanswer),
           category: category,
-          levels: level!);
+          levels: leve1.value);
+
       await updateQuiz(questions, id);
-      customSnackBar(context,
-       'update successfully',
-        Colors.green);
-        Navigator.of(context).pop();
+      // ignore: use_build_context_synchronously
+      customSnackBar(context, 'update successfully', Colors.green);
+      // ignore: use_build_context_synchronously
+      Navigator.of(context).pop();
     }
   }
 }

@@ -47,7 +47,7 @@ class _LevelPageState extends State<LevelPage> {
                               
                              decoration: BoxDecoration(
                                         color: Colors.white,
-                                         boxShadow: [BoxShadow(
+                                         boxShadow:const [ BoxShadow(
                                           color: Colors.grey,
                                           blurRadius: 2,
                                           offset: Offset(0, 10)
@@ -57,7 +57,7 @@ class _LevelPageState extends State<LevelPage> {
                                 padding: const EdgeInsets.only(left: 30, top: 16),
                                 child: Text(
                                   levels[index],
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 30,
                                     fontWeight: FontWeight.bold,
                                   ),

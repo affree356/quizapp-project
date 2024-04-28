@@ -21,7 +21,7 @@ class Resultpage extends StatelessWidget {
                 height: 340,
                 width: 410,
                 decoration: BoxDecoration(
-                    gradient: LinearGradient(
+                    gradient: const LinearGradient(
                       colors: [
                         Color(0xffB81736),
                         Color(0xff281537),
@@ -43,8 +43,8 @@ class Resultpage extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.only(
+                              const Padding(
+                                padding: EdgeInsets.only(
                                   top: 0,
                                 ),
                                 child: Text(
@@ -55,7 +55,7 @@ class Resultpage extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              Text('$score',style: TextStyle(fontSize: 25,color: Colors.black),)
+                              Text('$score',style: const TextStyle(fontSize: 25,color: Colors.black),)
                             ],
                           ),
                         ),
@@ -73,14 +73,14 @@ class Resultpage extends StatelessWidget {
                     decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
+                        boxShadow:const [
+                           BoxShadow(
                               blurRadius: 3,
                               spreadRadius: 1,
                               color: Color(0xffB81736),
                               offset: Offset(0, 1))
                         ]),
-                    child: Image(
+                    child: const Image(
                       image: AssetImage('assets/download-removebg-preview.png'),
                       height: 400,
                       width: 400,
@@ -89,7 +89,7 @@ class Resultpage extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 30,
         ),
         Center(
@@ -101,31 +101,32 @@ class Resultpage extends StatelessWidget {
                 decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
+                    boxShadow:const [
+                       BoxShadow(
                           blurRadius: 3, spreadRadius: 2, color: Colors.black26)
                     ]),
                 child: Center(
                   child: GestureDetector(
                     onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>Leaderboardpage()));
+                      Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>const Leaderboardpage()));
                     },
-                    child: Text(
+                    child: const Text(
                       'Leaderboards',
                       style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
                     ),
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               GestureDetector(
                 onTap: () {
                   Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (ctx) => HomePage()));
+                      .pushAndRemoveUntil(MaterialPageRoute(builder: (ctx) => HomePage()), (route) => false);
+                     
                 },
-                child: CircleAvatar(
+                child: const CircleAvatar(
                   radius: 25,
                   backgroundColor: Color.fromARGB(255, 22, 161, 108),
                   child: Icon(
@@ -135,7 +136,7 @@ class Resultpage extends StatelessWidget {
                   ),
                 ),
               ),
-              Text(
+              const Text(
                 'Play again',
               )
             ],

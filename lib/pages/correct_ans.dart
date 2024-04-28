@@ -1,4 +1,4 @@
-import 'dart:developer';
+
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -47,20 +47,22 @@ class _HistoryPageState extends State<HistoryPage> {
                       Navigator.of(context).push(
                           MaterialPageRoute(builder: (ctx) => HomePage()));
                     },
-                    child: Icon(
+                    child: const Icon(
                       Icons.navigate_before,
-                      size: 30,
+                      size: 40,
                       color: Colors.white,
                     )),
-                SizedBox(
-                  width: 100,
+                const SizedBox(
+                  width: 50,
                 ),
-                Text(
-                  'Review answers',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold),
+                const Center(
+                  child: Text(
+                    'Review answers',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold),
+                  ),
                 ),
               ],
             ),
@@ -119,10 +121,10 @@ class _HistoryPageState extends State<HistoryPage> {
                 ),
               );
             } else {
-              return Center(child: Text('No history'));
+              return const Center(child: Text('No history'));
             }
           } else {
-            return CircularProgressIndicator();
+            return const CircularProgressIndicator();
           }
         },
       ),

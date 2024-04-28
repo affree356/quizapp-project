@@ -17,7 +17,7 @@ Future<void>sharedisntancefucniton() async {
 }
 
 
-  static sharedprefset(String Username,String email) async {
+  static sharedprefset(String username,String email) async {
     final value = await SharedPreferences.getInstance();
     value.setString('UserVal', email);
  log('shared pref value set');

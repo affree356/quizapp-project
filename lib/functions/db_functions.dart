@@ -33,19 +33,19 @@ Future<void> getUser() async {
 }
 
 Future<void> saveCorrectAnswer(String id) async {
-  log('function work avnd');
+ 
   final userDB = await Hive.openBox<UserModel>('user_db');
   log('${userDB.values}');
   await Future.forEach(userDB.values, (element) {
     log('${element.gmail} --- gmail');
     log('${SharedPref().sharedInstanceUSer} --- sgmail');
     if (element.gmail == SharedPref().sharedInstanceUSer) {
-      log('adding working ano nn nokan first');
+     
       userData = element;
       UserModel? temp = userData;
       log('${temp!.correctAnswerIndex.runtimeType}');
       temp.correctAnswerIndex.add(id);
-      log('adding working ano nn nokan');
+     
       log('${temp.correctAnswerIndex}');
       temp.score += 5;
       userDB.put(temp.id, temp);
@@ -137,3 +137,5 @@ firebasehistory(String id) async {
     });
   }
 }
+
+

@@ -10,7 +10,7 @@ class Aboutapp extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
        appBar: PreferredSize(
-            preferredSize: Size.fromHeight(100),
+            preferredSize: const Size.fromHeight(100),
             child: Container(
               height: 100,
                decoration: const BoxDecoration(
@@ -24,9 +24,9 @@ class Aboutapp extends StatelessWidget {
                     children: [
                       IconButton(onPressed: (){
                         Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>HomePage()));
-                      }, icon: Icon(Icons.arrow_back,color: Colors.white,)),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 40),
+                      }, icon: const Icon(Icons.arrow_back,color: Colors.white,)),
+                      const Padding(
+                        padding:  EdgeInsets.only(left: 40),
                         child: Text('About App',style: TextStyle(fontSize: 28,color: Colors.white,fontWeight: FontWeight.bold),),
                       ),
                       

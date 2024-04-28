@@ -23,9 +23,9 @@ class Policypage extends StatelessWidget {
                     children: [
                       IconButton(onPressed: (){
                         Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>HomePage()));
-                      }, icon: Icon(Icons.arrow_back,color: Colors.white,)),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 40),
+                      }, icon: const Icon(Icons.arrow_back,color: Colors.white,)),
+                      const Padding(
+                        padding: EdgeInsets.only(left: 40),
                         child: Text('Privacy Policy',style: TextStyle(fontSize: 28,color: Colors.white,fontWeight: FontWeight.bold),),
                       ),
 

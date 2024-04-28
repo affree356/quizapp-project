@@ -1,6 +1,7 @@
  import 'package:flutter/material.dart';
 import 'package:quiz_app/screens/info.dart';
 
+
 AlertDialog buildAlertDialog(BuildContext context) {
     return AlertDialog(
       title: const Text('Logout'),
@@ -8,7 +9,7 @@ AlertDialog buildAlertDialog(BuildContext context) {
       actions: [
         TextButton(
           onPressed: () {
-            Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx) => const infoScreen()), (route) => false);
+            Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx) => const InfoScreen()), (route) => false);
           },
           child: const Text('Yes'),
         ),

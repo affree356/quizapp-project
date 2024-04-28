@@ -29,9 +29,6 @@ class _QuestionsState extends State<Questions> {
   int timer = 30;
   String showtimer = "30";
   bool canceltimer = false;
-  // late int wronganswer;
-  // late int correctAnswer;
-  // late String questions;
 
   @override
   void initState() {
@@ -41,40 +38,44 @@ class _QuestionsState extends State<Questions> {
       colorsToShow.add(Colors.white);
     }
   }
+  //  @override
+  // void dispose() {
+  //   _pageController.dispose();
+  //   canceltimer=false;
+
+  //   super.dispose();
+  // }
 
   void starttimer() async {
     const onesec = Duration(seconds: 1);
     Timer.periodic(onesec, (Timer t) {
       setState(() {
+
         
-        if (timer < 1) {
+        if (timer < 1 && currentpageIndex != numberOfQuestions) {
           t.cancel();
-          _pageController.nextPage(
+
+          showtimer = "30";
+          starttimer();
+
+          if (currentpageIndex != numberOfQuestions - 1) {
+            _pageController.nextPage(
               duration: const Duration(milliseconds: 600),
               curve: Curves.ease,
             );
+            timer = 30;
+          } else {
+           
+            t.cancel();
+            canceltimer = false;
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (ctx) => Resultpage(score: score)));
 
-            showtimer = "30";
-            starttimer();
-             if(currentpageIndex==numberOfQuestions-1){
-              t.cancel();
-            Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>Resultpage(score: score)));
-          return ;
+            return;
           }
-          // if (selectedOptionIndex == null) {
-          //   colorsToShow[selectedOptionIndex!] = iswrong;
-          //   _pageController.nextPage(
-          //     duration: const Duration(milliseconds: 600),
-          //     curve: Curves.ease,
-          //   );
-          // }
-          canceltimer = false;
-          timer = 30;
-          
-          // starttimer();
         } else if (canceltimer == true) {
           t.cancel();
-        } else {
+        } else if (timer > 0) {
           timer = timer - 1;
         }
         showtimer = timer.toString();
@@ -82,6 +83,7 @@ class _QuestionsState extends State<Questions> {
     });
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: StreamBuilder(
@@ -91,14 +93,15 @@ class _QuestionsState extends State<Questions> {
               .snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
-              return Center(child: CupertinoActivityIndicator());
+              return const Center(child: CupertinoActivityIndicator());
             } else {
-              int numberOfQuestions = snapshot.data!.docs.length;
+              numberOfQuestions = snapshot.data!.docs.length;
               return PageView.builder(
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   controller: _pageController,
                   itemCount: numberOfQuestions,
                   onPageChanged: (index) {
+
                     setState(() {
                       currentpageIndex = index;
                     });
@@ -118,7 +121,7 @@ class _QuestionsState extends State<Questions> {
                                 height: 200,
                                 width: 410,
                                 decoration: BoxDecoration(
-                                    gradient: LinearGradient(
+                                    gradient: const LinearGradient(
                                       colors: [
                                         Color(0xffB81736),
                                         Color(0xff281537),
@@ -132,14 +135,14 @@ class _QuestionsState extends State<Questions> {
                                         .snapshots(),
                                     builder: (context, AsyncSnapshot snapshot) {
                                       if (!snapshot.hasData) {
-                                        return CupertinoActivityIndicator();
+                                        return const CupertinoActivityIndicator();
                                       } else {
                                         return Padding(
                                           padding: const EdgeInsets.only(
                                               top: 20, left: 120),
                                           child: Text(
                                             snapshot.data['name'],
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                                 fontSize: 30,
                                                 color: Color.fromARGB(
                                                     255, 216, 164, 10),
@@ -158,7 +161,7 @@ class _QuestionsState extends State<Questions> {
                                   decoration: BoxDecoration(
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(20),
-                                      boxShadow: [
+                                      boxShadow: const [
                                         BoxShadow(
                                             blurRadius: 3,
                                             spreadRadius: 4,
@@ -176,14 +179,27 @@ class _QuestionsState extends State<Questions> {
                                         child: Center(
                                           child: Column(
                                             children: [
-                                              Text(' ${index+1}/${numberOfQuestions}',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500),),
                                               Padding(
-                                                padding: const EdgeInsets.only(top: 20,),
+                                                padding: const EdgeInsets.only(
+                                                    right: 20),
+                                                child: Text(
+                                                  ' ${index + 1}/$numberOfQuestions',
+                                                  style: const TextStyle(
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                  top: 20,
+                                                ),
                                                 child: Text(
                                                   quizsnap['question'],
-                                                  style: TextStyle(
-                                                    fontSize: 18,
-                                                      fontWeight: FontWeight.w500,
+                                                  style: const TextStyle(
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.w500,
                                                       color: Colors.black),
                                                 ),
                                               ),
@@ -193,7 +209,6 @@ class _QuestionsState extends State<Questions> {
                                       )),
                                 ),
                               ),
-                              // SizedBox(height: 20,),
                               Positioned(
                                 top: 80,
                                 left: 130,
@@ -202,12 +217,11 @@ class _QuestionsState extends State<Questions> {
                                   backgroundColor: Colors.white,
                                   child: Text(
                                     showtimer,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontSize: 30, color: Colors.black),
                                   ),
                                 ),
                               ),
-
                               Padding(
                                 padding: const EdgeInsets.only(
                                   top: 350,
@@ -225,7 +239,6 @@ class _QuestionsState extends State<Questions> {
                                               selectedOptionIndex = index;
                                               if (selectedOptionIndex ==
                                                   correctAnswer) {
-                                               
                                                 colorsToShow[correctAnswer] =
                                                     istrue;
                                                 score += 5;
@@ -233,7 +246,7 @@ class _QuestionsState extends State<Questions> {
                                                 log('if entedere +5');
                                                 updatescore();
                                                 updatescorefb();
-                                                // saveCorrectAnswer(quizsnap.id); 
+                                                // saveCorrectAnswer(quizsnap.id);
                                                 firebasehistory(quizsnap.id);
                                               } else {
                                                 log('if entedered nothing');
@@ -244,15 +257,14 @@ class _QuestionsState extends State<Questions> {
                                                 colorsToShow[correctAnswer] =
                                                     istrue;
                                               }
-                                              print(score);
+                                              // print(score);
                                               canceltimer = true;
                                             });
-
                                             await Future.delayed(
                                                 const Duration(seconds: 2));
-                                            setState(()  {
+                                            setState(() {
                                               canceltimer = true;
-                                              Timer(Duration(seconds: 0),
+                                              Timer(const Duration(seconds: 0),
                                                   () async {
                                                 if (currentpageIndex ==
                                                     numberOfQuestions - 1) {
@@ -264,7 +276,7 @@ class _QuestionsState extends State<Questions> {
                                                               )));
                                                 }
                                                 await _pageController.nextPage(
-                                                  duration: Duration(
+                                                  duration: const Duration(
                                                       milliseconds: 600), //
                                                   curve: Curves.linear,
                                                 );
@@ -318,11 +330,10 @@ class _QuestionsState extends State<Questions> {
           }),
     );
   }
-
 }
 
 // ------------------------------------------
-// to update scroes of user in firebase firestore
+// to update scores of user in firebase firestore
 // ------------------------------------------
 updatescorefb() async {
 // for refeence of current data to update

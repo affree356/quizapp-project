@@ -3,15 +3,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz_app/widgets/snackbar.dart';
 
-class categoryEdit extends StatefulWidget {
+class CategoryEdit extends StatefulWidget {
   final String id;
-  const categoryEdit({super.key, required this.id});
+  const CategoryEdit({super.key, required this.id});
 
   @override
-  State<categoryEdit> createState() => _categoryEditState();
+  State<CategoryEdit> createState() => _categoryEditState();
 }
 
-class _categoryEditState extends State<categoryEdit> {
+// ignore: camel_case_types
+class _categoryEditState extends State<CategoryEdit> {
   TextEditingController categoryName = TextEditingController();
   String category = "";
   @override
@@ -19,6 +20,16 @@ class _categoryEditState extends State<categoryEdit> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
+         leading: GestureDetector(
+            onTap: () {
+              // Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>const QuestionList()));
+              Navigator.of(context).pop();
+            },
+            child:const Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ),
+          ),
       ),
       body: StreamBuilder(
           stream: FirebaseFirestore.instance
@@ -27,7 +38,7 @@ class _categoryEditState extends State<categoryEdit> {
               .snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
-              return CupertinoActivityIndicator();
+              return const CupertinoActivityIndicator();
             } else {
               category = snapshot.data!['name'];
               categoryName.text = category;
@@ -37,8 +48,8 @@ class _categoryEditState extends State<categoryEdit> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(30.0),
+                const Padding(
+                  padding: EdgeInsets.all(30.0),
                   child: Text(
                     'Update Category',
                     style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
@@ -50,7 +61,7 @@ class _categoryEditState extends State<categoryEdit> {
                   child: TextField(
                     controller: categoryName,
                     decoration:
-                        InputDecoration(hintText: '  Enter a category name'),
+                        const InputDecoration(hintText: '  Enter a category name'),
                   ),
                 ),
                 Padding(
@@ -64,9 +75,9 @@ class _categoryEditState extends State<categoryEdit> {
                     child: TextButton(
                         onPressed: () {
                           updateCategory(widget.id, categoryName.text);
-                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Update successfully')));
+                           
                         },
-                        child: Text(
+                        child: const Text(
                           'Update ',
                           style: TextStyle(color: Colors.white, fontSize: 20),
                         )),
@@ -83,8 +94,11 @@ class _categoryEditState extends State<categoryEdit> {
         .collection('category_db')
         .doc(widget.id)
         .update({'name': newCategoryName});
+       // ignore: use_build_context_synchronously
        customSnackBar(context,
         'Category addedd successfully', 
         Colors.green);
+        // ignore: use_build_context_synchronously
+        Navigator.of(context).pop();
   }
 }

@@ -1,10 +1,7 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz_app/functions/db_functions.dart';
-import 'package:quiz_app/model/sharedclass.dart';
 import 'package:quiz_app/model/user_model.dart';
 import 'package:quiz_app/pages/home_page.dart';
 import 'package:quiz_app/screens/user/user_login.dart';
@@ -12,7 +9,7 @@ import 'package:quiz_app/user_auth/firebase_auth.dart';
 import 'package:quiz_app/widgets/text.dart';
 
 class SignUpscreen extends StatefulWidget {
-  SignUpscreen({super.key});
+  const SignUpscreen({super.key});
 
   @override
   State<SignUpscreen> createState() => _SignUpscreenState();
@@ -50,14 +47,14 @@ class _SignUpscreenState extends State<SignUpscreen> {
         Container(
           height: double.infinity,
           width: double.infinity,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             gradient: LinearGradient(colors: [
               Color(0xffB81736),
               Color(0xff281537),
             ]),
           ),
-          child: Padding(
-            padding: const EdgeInsets.only(top: 60, left: 22),
+          child: const Padding(
+            padding: EdgeInsets.only(top: 60, left: 22),
             child: Text(
               'Create your\nAccount !',
               style: TextStyle(
@@ -72,7 +69,7 @@ class _SignUpscreenState extends State<SignUpscreen> {
           child: Container(
             height: double.infinity,
             width: double.infinity,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(40),
@@ -83,7 +80,7 @@ class _SignUpscreenState extends State<SignUpscreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       height: 50,
                     ),
                     Padding(
@@ -93,7 +90,7 @@ class _SignUpscreenState extends State<SignUpscreen> {
                         child: TextFormField(
                           keyboardType: TextInputType.text,
                           controller: usernameController,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                               prefixIcon: Icon(Icons.person),
                               hintText: ' Username',
                               hintStyle: TextStyle(color: Colors.grey)),
@@ -105,7 +102,7 @@ class _SignUpscreenState extends State<SignUpscreen> {
                             }
                           },
                         )),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Padding(
@@ -113,7 +110,7 @@ class _SignUpscreenState extends State<SignUpscreen> {
                         child: TextFormField(
                           keyboardType: TextInputType.emailAddress,
                           controller: emailController,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                               prefixIcon: Icon(Icons.email),
                               hintText: 'Email',
                               hintStyle: TextStyle(color: Colors.grey)),
@@ -125,7 +122,7 @@ class _SignUpscreenState extends State<SignUpscreen> {
                             }
                           },
                         )),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Padding(
@@ -142,11 +139,11 @@ class _SignUpscreenState extends State<SignUpscreen> {
                                     });
                                   },
                                   child: _obscuretext
-                                      ? Icon(Icons.visibility_off)
-                                      : Icon(Icons.visibility)),
-                              prefixIcon: Icon(Icons.lock),
+                                      ? const Icon(Icons.visibility_off)
+                                      : const Icon(Icons.visibility)),
+                              prefixIcon: const Icon(Icons.lock),
                               hintText: ' create a Password',
-                              hintStyle: TextStyle(color: Colors.grey)),
+                              hintStyle: const TextStyle(color: Colors.grey)),
                           validator: (value) {
                             if (value!.isEmpty) {
                               return 'please create a password';
@@ -159,7 +156,7 @@ class _SignUpscreenState extends State<SignUpscreen> {
                             }
                           },
                         )),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Padding(
@@ -179,7 +176,7 @@ class _SignUpscreenState extends State<SignUpscreen> {
                                       : const Icon(Icons.visibility)),
                               prefixIcon: const Icon(Icons.lock),
                               hintText: 'Confirm Password',
-                              hintStyle: TextStyle(color: Colors.grey)),
+                              hintStyle: const TextStyle(color: Colors.grey)),
                           validator: (value) {
                             if (value!.isEmpty) {
                               return 'please confirm your pssword';
@@ -204,18 +201,20 @@ class _SignUpscreenState extends State<SignUpscreen> {
                               colors: [Color(0xffB81736), Color(0xff281537)])),
                       child: ElevatedButton(
                         onPressed: () {
-                          if(_key.currentState!.validate()){
-                             signUp(UserModel(
-                              firebaseId: '',
-                              username: usernameController.text,
-                              gmail: emailController.text,
-                              age: '',
-                              question: '',
-                              correctAnswerIndex: {},
-                              score: 0));
+                          if (_key.currentState!.validate()) {
+                            signUp(UserModel(
+                                firebaseId: '',
+                                username: usernameController.text,
+                                gmail: emailController.text,
+                                age: '',
+                                question: '',
+                                correctAnswerIndex: {},
+                                score: 0));
                           }
-                         
                         },
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.transparent,
+                            shadowColor: Colors.transparent),
                         child: const Text(
                           'SIGN UP',
                           style: TextStyle(
@@ -223,15 +222,12 @@ class _SignUpscreenState extends State<SignUpscreen> {
                             fontSize: 18,
                           ),
                         ),
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.transparent,
-                            shadowColor: Colors.transparent),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 90,
                     ),
-                    Text(
+                    const Text(
                       "Already have an account?",
                       style: TextStyle(
                         fontSize: 16,
@@ -239,13 +235,13 @@ class _SignUpscreenState extends State<SignUpscreen> {
                     ),
                     GestureDetector(
                         onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (ctx) =>userLogin()));
+                          Navigator.of(context).push(
+                              MaterialPageRoute(builder: (ctx) => const UserLogin()));
                         },
                         child: styledText('Sign in',
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
-                        Color: Colors.blue))
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                            Color: Colors.blue))
                   ],
                 ),
               ),
@@ -278,13 +274,13 @@ class _SignUpscreenState extends State<SignUpscreen> {
       //   final _sharedprefs = await SharedPreferences.getInstance();
       //   final userloggedin = _sharedprefs.setString('user_login', user.uid);
       // print('user is successfully created');
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx)=>HomePage()));
+      Navigator.of(context)
+          .pushAndRemoveUntil(MaterialPageRoute(builder: (ctx1) =>  HomePage()), (route) => false);
     } else {
       print('some error occured');
     }
   }
 }
-
 
 // ------------------------------------------
 // to store users credentinals in firebase
@@ -298,5 +294,5 @@ firebsaeUserStore(String username, String email) async {
 
   FirebaseFirestore.instance
       .collection('users')
-      .add({' username': username, 'mail': email, 'score': 0});
+      .add({' username': username, 'mail': email, 'score': 0, 'image':'' });
 }

@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz_app/screens/admin/add_question.dart';
-import 'package:quiz_app/screens/admin/question_tab.dart';
+import 'package:quiz_app/screens/admin/question_tabdetails.dart';
 
 
 class QuestionList extends StatelessWidget {
@@ -14,9 +14,9 @@ class QuestionList extends StatelessWidget {
        floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context)
-              .push(MaterialPageRoute(builder: (ctx) => AddQuestionPage()));
+              .push(MaterialPageRoute(builder: (ctx) => const AddQuestionPage()));
         },
-        backgroundColor: Color.fromARGB(255, 39, 38, 38),
+        backgroundColor: const Color.fromARGB(255, 39, 38, 38),
         child: const Icon(
           Icons.add,
           color: Colors.white,
@@ -41,7 +41,7 @@ class QuestionList extends StatelessWidget {
                   color: const Color.fromARGB(255, 172, 169, 169),
                   elevation: 5,
                   child:ListTile(
-                    title: Text(quizsnap['question'],style: TextStyle(fontWeight: FontWeight.bold),),
+                    title: Text(quizsnap['question'],style: const TextStyle(fontWeight: FontWeight.bold),),
                   )
                 ),
               ),

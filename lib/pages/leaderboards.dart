@@ -45,12 +45,15 @@ class _MyWidgetState extends State<Leaderboardpage> {
                       Navigator.of(context).push(
                           MaterialPageRoute(builder: (ctx) => HomePage()));
                     },
-                    child: Icon(
-                      Icons.arrow_back,
-                      color: Colors.white,
+                    child: const Padding(
+                      padding: EdgeInsets.only(left: 10,),
+                      child: Icon(
+                        Icons.arrow_back_ios,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
-                  Center(
+                  const Center(
                     child: Padding(
                       padding: EdgeInsets.only(
                         left: 100,top: 10,
@@ -74,20 +77,20 @@ class _MyWidgetState extends State<Leaderboardpage> {
               .snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
-              return Center(child: CupertinoActivityIndicator());
+              return const Center(child: CupertinoActivityIndicator());
             }
             return ListView.builder(
               itemCount: snapshot.data?.docs.length,
               itemBuilder: (context, index) {
                 return Card(
                   elevation: 5,
-                  margin: EdgeInsets.all(10),
+                  margin: const EdgeInsets.all(10),
                   color: Colors.white,
                   child: ListTile(
                     title: Center(
                       child: Text(
                         snapshot.data?.docs[index][FbScoreConst.username],
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                       
@@ -95,9 +98,9 @@ class _MyWidgetState extends State<Leaderboardpage> {
                     subtitle: Center(
                       child: Text(
                         'score:${snapshot.data?.docs[index][FbScoreConst.score].toString() as String}',
-                        style: TextStyle(fontWeight: FontWeight.w500),
+                        style: const TextStyle(fontWeight: FontWeight.w500),
                       ),
-                    ),trailing: Text('Rank${index+1}',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+                    ),trailing: Text('Rank${index+1}',style: const TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
                   ),
                 );
               },

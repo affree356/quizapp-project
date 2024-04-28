@@ -1,10 +1,8 @@
 
 import 'package:flutter/material.dart';
-
 import 'package:quiz_app/screens/admin/category_tab.dart';
 import 'package:quiz_app/screens/admin/question_list.dart';
 import 'package:quiz_app/widgets/alertdialogue.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AdminPage extends StatelessWidget {
@@ -16,25 +14,25 @@ class AdminPage extends StatelessWidget {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-         bottom: TabBar(tabs: [
+         bottom: const TabBar(tabs: [
           Tab(child: Text('Category',style: TextStyle(fontSize: 20),),),
           Tab(child: Text('Question',style: TextStyle(fontSize: 20),),)
          ],labelColor: Colors.white, // Set the color of the selected tab label
               unselectedLabelColor: Colors.grey, // Set the color of unselected tab labels
-              indicatorColor: Colors.grey,
+              indicatorColor: Colors.grey
          ),
           backgroundColor: Colors.black,
-          title: Center(child: Text('AdminPanel',style: TextStyle(color: Colors.white,fontWeight: FontWeight.w600),)),
+          title: const Center(child: Text('AdminPanel',style: TextStyle(color: Colors.white,fontWeight: FontWeight.w600),)),
           actions: [
             IconButton(onPressed: (){
               
             signout(context);
-            }, icon: Icon(Icons.exit_to_app),color: Colors.white,),
+            }, icon: const Icon(Icons.exit_to_app),color: Colors.white,),
             
           ],
         ),
-        body: TabBarView(children:[
-        const  CategoryPage(),
+        body: const TabBarView(children:[
+        CategoryPage(),
         QuestionList()
        
 
@@ -46,6 +44,7 @@ class AdminPage extends StatelessWidget {
   }
   void signout(BuildContext context)async{
     
+     // ignore: no_leading_underscores_for_local_identifiers
      final _sharedPrefs = await SharedPreferences.getInstance();
      await _sharedPrefs.clear();
       // ignore: use_build_context_synchronously

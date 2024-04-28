@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz_app/functions/database_functions.dart';
 import 'package:quiz_app/screens/admin/edit.question.dart';
-import 'package:quiz_app/screens/admin/question_list.dart';
+import 'package:quiz_app/widgets/snackbar.dart';
 import 'package:quiz_app/widgets/text.dart';
 
 class QuestionDetails extends StatefulWidget {
@@ -60,14 +60,15 @@ class _QuestionDetails extends State<QuestionDetails> {
                                         .snapshots(),
                                     builder: (context, snapshot) {
                                       if (!snapshot.hasData) {
-                                        return CupertinoActivityIndicator();
+                                        return const CupertinoActivityIndicator();
                                       } else {
                                         return Row(
                                           children: [
                                             
                                               IconButton(onPressed: (){
-                                                Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>QuestionList()));
-                                              }, icon: Icon(Icons.arrow_back_ios)),
+                                                Navigator.of(context).pop();
+                                                // Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>const QuestionList()));
+                                              }, icon: const Icon(Icons.arrow_back_ios)),
                                             Padding(
                                               padding: const EdgeInsets.only(left: 80),
                                               child: styledText(
@@ -78,7 +79,7 @@ class _QuestionDetails extends State<QuestionDetails> {
                                         );
                                       }
                                     }),
-                                SizedBox(
+                                const SizedBox(
                                   height: 20,
                                 ),
                                 Container(
@@ -93,12 +94,12 @@ class _QuestionDetails extends State<QuestionDetails> {
                                       padding: const EdgeInsets.all(10),
                                       child: Text(
                                         quizsnap['question'],
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontSize: 18,
                                             fontWeight: FontWeight.w500),
                                       ),
                                     )),
-                                SizedBox(
+                                const SizedBox(
                                   height: 20,
                                 ),
                                 Container(
@@ -111,7 +112,7 @@ class _QuestionDetails extends State<QuestionDetails> {
                                       padding: const EdgeInsets.all(8.0),
                                       child: Text(
                                         quizsnap['options'][0],
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontSize: 18,
                                             fontWeight: FontWeight.w500),
                                       ),
@@ -202,7 +203,7 @@ class _QuestionDetails extends State<QuestionDetails> {
                                           Navigator.of(context).push(
                                               MaterialPageRoute(
                                                   builder: (ctx) =>
-                                                      questionedit(
+                                                      Questionedit(
                                                         id: quizsnap.id,
                                                       )));
                                         },
@@ -211,16 +212,14 @@ class _QuestionDetails extends State<QuestionDetails> {
                                           size: 30,
                                         )),
                                     GestureDetector(
-                                      onTap: () {
-                                        deleteQuiz(quizsnap.id);
-                                        Navigator.of(context).pushReplacement(
-                                            MaterialPageRoute(
-                                                builder: (ctx) =>
-                                                    QuestionList()));
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(SnackBar(
-                                                content: Text(
-                                                    ' Deleted successfully')));
+                                      onTap: () async {
+                                       await deleteQuestion(quizsnap.id);
+                                        // ignore: use_build_context_synchronously
+                                        Navigator.of(context).pop();
+                                        // ignore: use_build_context_synchronously
+                                        customSnackBar(context,
+                                         'Successfully deleted', 
+                                         Colors.red);
                                       },
                                       child: const Icon(
                                         Icons.delete,

@@ -3,14 +3,15 @@ import 'package:quiz_app/screens/admin/admin_page.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-class adminLoginScreen extends StatefulWidget {
-  const adminLoginScreen({super.key});
+class AdminLoginScreen extends StatefulWidget {
+  const AdminLoginScreen({super.key});
 
   @override
-  State<adminLoginScreen> createState() => _adminLoginScreenState();
+  State<AdminLoginScreen> createState() => _adminLoginScreenState();
 }
 
-class _adminLoginScreenState extends State<adminLoginScreen> {
+// ignore: camel_case_types
+class _adminLoginScreenState extends State<AdminLoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passController = TextEditingController();
@@ -46,7 +47,7 @@ class _adminLoginScreenState extends State<adminLoginScreen> {
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    icon: Icon(Icons.navigate_before)),
+                    icon: const Icon(Icons.navigate_before)),
               ),
               const Text(
                 'Hello\nSign in!',
@@ -109,10 +110,10 @@ class _adminLoginScreenState extends State<adminLoginScreen> {
                                 },
                                 child: _obscureText
                                     ? const Icon(Icons.visibility_off)
-                                    : Icon(Icons.visibility)),
-                            prefixIcon: Icon(Icons.lock),
+                                    : const Icon(Icons.visibility)),
+                            prefixIcon: const Icon(Icons.lock),
                             hintText: 'Enter Your Password',
-                            hintStyle: TextStyle(color: Colors.grey)),
+                            hintStyle: const TextStyle(color: Colors.grey)),
                         validator: (value) {
                           if (value!.isEmpty) {
                             return 'please enter your password';
@@ -142,6 +143,9 @@ class _adminLoginScreenState extends State<adminLoginScreen> {
                           checkLogin(context);
                         }
                       },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          shadowColor: Colors.transparent),
                       child: const Text(
                         'SIGN IN',
                         style: TextStyle(
@@ -149,9 +153,6 @@ class _adminLoginScreenState extends State<adminLoginScreen> {
                           fontSize: 18,
                         ),
                       ),
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.transparent,
-                          shadowColor: Colors.transparent),
                     ),
                   ),
                 ],
@@ -167,10 +168,12 @@ class _adminLoginScreenState extends State<adminLoginScreen> {
     final username = emailController.text;
     final password = passController.text;
     if (username == email && password == pass) {
+      // ignore: no_leading_underscores_for_local_identifiers
       final _sharedPrefs = await SharedPreferences.getInstance();
       await _sharedPrefs.setString('login_status', 'admin');
+      // ignore: use_build_context_synchronously
       Navigator.of(context)
-          .pushAndRemoveUntil(MaterialPageRoute(builder: (ctx1) => AdminPage()), (route) => false);
+          .pushAndRemoveUntil(MaterialPageRoute(builder: (ctx1) => const AdminPage()), (route) => false);
     }
   }
 }

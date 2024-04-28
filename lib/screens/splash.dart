@@ -6,6 +6,7 @@ import 'package:quiz_app/model/sharedclass.dart';
 import 'package:quiz_app/pages/home_page.dart';
 import 'package:quiz_app/screens/admin/admin_page.dart';
 import 'package:quiz_app/screens/info.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -47,24 +48,28 @@ class _SplashScreenState extends State<SplashScreen> {
 
     // ignore: use_build_context_synchronously
     Navigator.of(context)
-        .pushReplacement(MaterialPageRoute(builder: (ctx) => const infoScreen()));
+        .pushReplacement(MaterialPageRoute(builder: (ctx) => const InfoScreen()));
   }
 
   Future<void> checkAdminloggedIn(BuildContext context) async {
+    // ignore: no_leading_underscores_for_local_identifiers
     final _sharedPrefs = await SharedPreferences.getInstance();
     final adminloggedin = _sharedPrefs.getString('login_status');
     FirebaseAuth user = FirebaseAuth.instance;
     if (user.currentUser != null && user.currentUser!.uid.isNotEmpty) {
+      // ignore: use_build_context_synchronously
       Navigator.of(context)
           .push(MaterialPageRoute(builder: (ctx) => HomePage()));
       return;
     }
 
     if (adminloggedin == null) {
+      // ignore: use_build_context_synchronously
       gotoLogin(context);
     } else if (adminloggedin == 'admin') {
+      // ignore: use_build_context_synchronously
       Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (ctx) => AdminPage()));
+          .pushReplacement(MaterialPageRoute(builder: (ctx) => const AdminPage()));
     }
   }
 }

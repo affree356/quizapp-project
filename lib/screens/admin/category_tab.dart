@@ -25,7 +25,7 @@ class _CategoryPageState extends State<CategoryPage> {
               .push(MaterialPageRoute(builder: (ctx) => AddCategory()));
         },
         backgroundColor: Colors.black,
-        child: Icon(
+        child: const Icon(
           Icons.add,
           color: Colors.white,
         ),
@@ -45,33 +45,33 @@ class _CategoryPageState extends State<CategoryPage> {
                       color: const Color.fromARGB(255, 172, 169, 169),
                       child: ListTile(
                         title: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 20),
-                              child: GestureDetector(
-                                onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>ShowQuestions(category: quizsnap.id)));
-                                },
-                                child: Text(
-                                  quizsnap['name'],
-                                  style: TextStyle(
-                                      fontSize: 28, fontWeight: FontWeight.bold),
-                                ),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>ShowQuestions(category: quizsnap.id)));
+                              },
+                              child: Text(
+                                quizsnap['name'],
+                                style: const TextStyle(
+                                    fontSize: 28, fontWeight: FontWeight.bold),
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 100),
-                              child: IconButton(
-                                onPressed: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (ctx) => categoryEdit(
-                                            id: quizsnap.id,
-                                          )));
-                                },
-                                icon: Icon(Icons.edit),
-                                color: Colors.black,
-                              ),
+                            Row(
+                              
+                              children: [
+                                IconButton(
+                                  
+                                  onPressed: () {
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (ctx) => CategoryEdit(
+                                              id: quizsnap.id,
+                                            )));
+                                  },
+                                  icon: const Icon(Icons.edit),
+                                  color: Colors.black,
+                                ),
+                              ],
                             ),
                             IconButton(
                               onPressed: () async {
@@ -87,8 +87,8 @@ class _CategoryPageState extends State<CategoryPage> {
                                               "This category can't be deleted",style: TextStyle(fontSize: 20),)));
                                 }
                               },
-                              icon: Icon(Icons.delete),
-                              color: Color.fromARGB(255, 153, 47, 39),
+                              icon: const Icon(Icons.delete),
+                              color: const Color.fromARGB(255, 153, 47, 39),
                             )
                           ],
                         ),

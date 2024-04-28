@@ -1,25 +1,20 @@
 
-
 import 'dart:developer';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:quiz_app/functions/db_functions.dart';
 import 'package:quiz_app/model/sharedclass.dart';
-
-
 import 'package:quiz_app/pages/home_page.dart';
 import 'package:quiz_app/screens/user/user_signup.dart';
 import 'package:quiz_app/user_auth/firebase_auth.dart';
 
-class userLogin extends StatefulWidget {
-  const userLogin({super.key});
+class UserLogin extends StatefulWidget {
+  const UserLogin({super.key});
 
   @override
-  State<userLogin> createState() => _userLoginState();
+  State<UserLogin> createState() => UserLoginState();
 }
 
-class _userLoginState extends State<userLogin> {
+class UserLoginState extends State<UserLogin> {
   final TextEditingController usernameContoller =TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
@@ -41,14 +36,14 @@ class _userLoginState extends State<userLogin> {
         Container(
           height: double.infinity,
           width: double.infinity,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             gradient: LinearGradient(colors: [
               Color(0xffB81736),
               Color(0xff281537),
             ]),
           ),
-          child: Padding(
-            padding: const EdgeInsets.only(top: 60, left: 22),
+          child: const Padding(
+            padding: EdgeInsets.only(top: 60, left: 22),
             child: Text(
               'Hello\nSign in!',
               style: TextStyle(
@@ -63,7 +58,7 @@ class _userLoginState extends State<userLogin> {
           child: Container(
             height: double.infinity,
             width: double.infinity,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(40),
@@ -76,7 +71,7 @@ class _userLoginState extends State<userLogin> {
                     child: TextFormField(
                       keyboardType: TextInputType.emailAddress,
                       controller: _emailController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                           prefixIcon: Icon(Icons.email),
                           hintText: 'Enter Your Email',
                           hintStyle: TextStyle(color: Colors.grey)),
@@ -88,7 +83,7 @@ class _userLoginState extends State<userLogin> {
                         }
                       },
                     )),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 Padding(
@@ -104,11 +99,11 @@ class _userLoginState extends State<userLogin> {
                                 });
                               },
                               child: obscureText
-                                  ? Icon(Icons.visibility_off)
-                                  : Icon(Icons.visibility)),
-                          prefixIcon: Icon(Icons.lock),
+                                  ? const Icon(Icons.visibility_off)
+                                  : const Icon(Icons.visibility)),
+                          prefixIcon: const Icon(Icons.lock),
                           hintText: 'Enter Your Password',
-                          hintStyle: TextStyle(color: Colors.grey)),
+                          hintStyle: const TextStyle(color: Colors.grey)),
                       validator: (value) {
                         if (value!.isEmpty) {
                           return 'please enter your password';
@@ -117,7 +112,7 @@ class _userLoginState extends State<userLogin> {
                         }
                       },
                     )),
-                SizedBox(
+                const SizedBox(
                   height: 70,
                 ),
                 Container(
@@ -132,6 +127,9 @@ class _userLoginState extends State<userLogin> {
                     onPressed: () {
                       signIn();
                     },
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.transparent,
+                        shadowColor: Colors.transparent),
                     child: const Text(
                       'SIGN IN',
                       style: TextStyle(
@@ -139,15 +137,12 @@ class _userLoginState extends State<userLogin> {
                         fontSize: 18,
                       ),
                     ),
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.transparent,
-                        shadowColor: Colors.transparent),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
-                Text(
+                const Text(
                   "Don't have an account?",
                   style: TextStyle(
                     fontSize: 18,
@@ -156,9 +151,9 @@ class _userLoginState extends State<userLogin> {
                 GestureDetector(
                     onTap: () {
                       Navigator.of(context).push(
-                          MaterialPageRoute(builder: (ctx) => SignUpscreen()));
+                          MaterialPageRoute(builder: (ctx) => const SignUpscreen()));
                     },
-                    child: Text(
+                    child: const Text(
                       'Sign up',
                       style: TextStyle(
                           fontSize: 18,
@@ -181,7 +176,7 @@ class _userLoginState extends State<userLogin> {
     User? user = await _auth.signInWithEmailandPass(email, pass);
 
     if (user != null) {
-      print('user is successfully signedin');
+      log('user is successfully signedin');
       log(usernameContoller.text);
         // questionListNotifier.value.clear();
       SharedPref.sharedprefset(usernameContoller.text, email);
@@ -189,11 +184,13 @@ class _userLoginState extends State<userLogin> {
         SharedPref().sharedisntancefucniton();
             
       log(SharedPref().sharedInstanceUSer);
+      // ignore: use_build_context_synchronously
       Navigator.of(context)
-          .push(MaterialPageRoute(builder: (ctx) => HomePage()));
+          .pushAndRemoveUntil(MaterialPageRoute(builder: (ctx1) =>  HomePage()), (route) => false);
+    
          
     } else {
-      print('some error occured');
+      log('some error occured');
     }
   }
 }

@@ -19,6 +19,8 @@ Future addUser() async {
   await FirebaseFirestore.instance.collection('user').add({});
 }
 
+
+
 Future updateQuiz(QuestionModel data, String id) async {
   await FirebaseFirestore.instance.collection('question_db').doc(id).update({
     'question': data.question,
@@ -31,6 +33,10 @@ Future updateQuiz(QuestionModel data, String id) async {
 
 Future<void> deleteQuiz(String id) async {
   await FirebaseFirestore.instance.collection('category_db').doc(id).delete();
+}
+
+Future<void> deleteQuestion(String id)async{
+ await FirebaseFirestore.instance.collection('question_db').doc(id).delete();
 }
 
 Future<bool> checkQuestion(String id) async {
@@ -54,8 +60,6 @@ togetfunction() async {
       log(element.score.toString());
     }
 
-    //  FirebaseFirestore.instance.collection('score').add({
-
-    // });
+   
   });
 }

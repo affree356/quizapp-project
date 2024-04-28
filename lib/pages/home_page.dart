@@ -1,11 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz_app/functions/db_functions.dart';
-import 'package:quiz_app/model/user_model.dart';
+import 'package:quiz_app/model/sharedclass.dart';
 
 import 'package:quiz_app/pages/category.dart';
-import 'package:quiz_app/pages/history.dart';
+import 'package:quiz_app/pages/correct_ans.dart';
 import 'package:quiz_app/pages/leaderboards.dart';
 import 'package:quiz_app/pages/levels.dart';
 import 'package:quiz_app/pages/profile.dart';
@@ -18,6 +19,7 @@ import 'package:quiz_app/widgets/alertdialogue.dart';
 
 class HomePage extends StatefulWidget {
 
+  // ignore: prefer_const_constructors_in_immutables
   HomePage({
     super.key,
    
@@ -27,14 +29,10 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _homePageState();
 }
 
+// ignore: camel_case_types
 class _homePageState extends State<HomePage> {
   int currentSelectedIndex = 0;
-
-  //  final _pages =[
-  //   homePage(),
-  //   HistoryPage(),
-  //   ProfilePage()
-  //  ];
+    
 
   @override
   Widget build(BuildContext context) {
@@ -45,13 +43,13 @@ class _homePageState extends State<HomePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 50,
               ),
-              Row(
+              const Row(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(
+                    padding: EdgeInsets.only(
                       left: 5,
                     ),
                     child: Icon(
@@ -63,7 +61,7 @@ class _homePageState extends State<HomePage> {
                     width: 5,
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(
+                    padding: EdgeInsets.only(
                       top: 7,
                     ),
                     child: Text(
@@ -74,7 +72,7 @@ class _homePageState extends State<HomePage> {
                   ),
                 ],
               ),
-              Divider(
+              const Divider(
                 thickness: 2,
               ),
               Padding(
@@ -84,17 +82,17 @@ class _homePageState extends State<HomePage> {
                     GestureDetector(
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (ctx) => TermsAndCondpage()));
+                            builder: (ctx) => const TermsAndCondpage()));
                       },
-                      child: Text(
+                      child: const Text(
                         'Terms and Conditions',
                         style: TextStyle(
                           fontSize: 18,
                         ),
                       ),
                     ),
-                    SizedBox(width: 45),
-                    Icon(
+                    const SizedBox(width: 45),
+                    const Icon(
                       Icons.navigate_next,
                       color: Colors.grey,
                       size: 30,
@@ -111,17 +109,17 @@ class _homePageState extends State<HomePage> {
                     GestureDetector(
                       onTap: () {
                         Navigator.of(context).push(
-                            MaterialPageRoute(builder: (ctx) => Policypage()));
+                            MaterialPageRoute(builder: (ctx) => const Policypage()));
                       },
-                      child: Text(
+                      child: const Text(
                         'Privacy policy',
                         style: TextStyle(
                           fontSize: 18,
                         ),
                       ),
                     ),
-                    SizedBox(width: 110),
-                    Icon(
+                    const SizedBox(width: 110),
+                    const Icon(
                       Icons.navigate_next,
                       color: Colors.grey,
                       size: 30,
@@ -136,17 +134,17 @@ class _homePageState extends State<HomePage> {
                     GestureDetector(
                       onTap: () {
                         Navigator.of(context).push(
-                            MaterialPageRoute(builder: (ctx) => Aboutapp()));
+                            MaterialPageRoute(builder: (ctx) => const Aboutapp()));
                       },
-                      child: Text(
+                      child: const Text(
                         'About Us',
                         style: TextStyle(
                           fontSize: 18,
                         ),
                       ),
                     ),
-                    SizedBox(width: 145),
-                    Icon(
+                    const SizedBox(width: 145),
+                    const Icon(
                       Icons.navigate_next,
                       color: Colors.grey,
                       size: 30,
@@ -154,15 +152,15 @@ class _homePageState extends State<HomePage> {
                   ],
                 ),
               ),
-              Divider(),
-              SizedBox(
+              const Divider(),
+              const SizedBox(
                 height: 10,
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 25),
                 child: Row(
                   children: [
-                    Text(
+                    const Text(
                       'Logout',
                       style: TextStyle(fontSize: 20),
                     ),
@@ -171,9 +169,9 @@ class _homePageState extends State<HomePage> {
                           FirebaseAuth.instance.signOut();
                           buildAlertDialog(context);
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (ctx) => infoScreen()));
+                              builder: (ctx) => const InfoScreen()));
                         },
-                        icon: Icon(
+                        icon: const Icon(
                           Icons.exit_to_app,
                           size: 30,
                         )),
@@ -199,7 +197,7 @@ class _homePageState extends State<HomePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: EdgeInsets.only(top: 50, left: 30),
+                padding: const EdgeInsets.only(top: 50, left: 30),
                 child: Builder(builder: (context) {
                   return GestureDetector(
                     onTap: () {
@@ -218,16 +216,28 @@ class _homePageState extends State<HomePage> {
                           child: GestureDetector(
                               onTap: () async {
                                 await getUser();
+                                // ignore: use_build_context_synchronously
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (ctx) => ProfilePage(
                                           id: FirebaseAuth
                                               .instance.currentUser!.uid,
                                         )));
                               },
-                              child: Image(
-                                image: AssetImage(
-                                    'assets/user-removebg-preview 1 (1).png'),
-                                height: 50,
+                              child: StreamBuilder(
+                                stream: FirebaseFirestore.instance.collection('users').where('mail',isEqualTo: SharedPref().sharedInstanceUSer).snapshots(),
+                                builder: (context, snapshot) {
+                                   if(snapshot.hasData && snapshot.data?.docs[0]['image'].isNotEmpty){
+                            // image = snapshot.data?.docs[0]['image'];
+                            return Image.network(snapshot.data?.docs[0]['image'],height: 50,width: 100,);
+                                   }else{
+                                  return const Image(
+                                    image: AssetImage(
+                                        'assets/user-removebg-preview 1 (1).png'),
+                                    height: 50,
+                                    fit: BoxFit.cover,
+                                  );
+                                }
+                                }
                               )),
                         )
                       ],
@@ -282,19 +292,20 @@ class _homePageState extends State<HomePage> {
                       Colors.white, // Set the color of the selected tab label
                   unselectedLabelColor:
                       Colors.grey, // Set the color of unselected tab labels
-                  indicatorColor: Colors.grey,
+                  indicatorColor: Colors.blue,
                 ),
               ),
               Expanded(
                   child:
-                      TabBarView(children: [const LevelPage(), UserCategory()]))
+                      TabBarView(children: [const LevelPage(),
+                       UserCategory()]))
             ],
           ),
         ),
         bottomNavigationBar: CurvedNavigationBar(
-          backgroundColor: Color(0xffB81736),
-          animationDuration: Duration(milliseconds: 300),
-          items: [
+          backgroundColor: const Color(0xffB81736),
+          animationDuration: const Duration(milliseconds: 300),
+          items: const [
             Icon(
               Icons.home,
               size: 30,
@@ -318,10 +329,10 @@ class _homePageState extends State<HomePage> {
                     .push(MaterialPageRoute(builder: (ctx) => HomePage()));
               } else if (newIndex == 1) {
                 Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (ctx) => HistoryPage()));
+                    .push(MaterialPageRoute(builder: (ctx) => const HistoryPage()));
               } else if (newIndex == 2) {
                 Navigator.of(context).push(
-                    MaterialPageRoute(builder: (ctx) => Leaderboardpage()));
+                    MaterialPageRoute(builder: (ctx) => const Leaderboardpage()));
               } else if (newIndex == 3) {
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (ctx) => ProfilePage(

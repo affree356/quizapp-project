@@ -6,7 +6,9 @@ import 'package:quiz_app/model/user_model.dart';
 
 import 'package:quiz_app/screens/splash.dart';
 
+// ignore: constant_identifier_names
 const user_login = 'UserSigned';
+// ignore: constant_identifier_names
 const login_status = 'UserloggedIn';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

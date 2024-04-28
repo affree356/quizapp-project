@@ -39,31 +39,48 @@ class _QuizPageState extends State<QuizPage> {
     }
   }
 
+  @override
+  void dispose() {
+    _pageController.dispose();
+    canceltimer=false;
+
+    super.dispose();
+  }
+
   void starttimer() async {
     const onesec = Duration(seconds: 1);
     Timer.periodic(onesec, (Timer t) {
       setState(() {
-        if (timer < 1) {
+        if (timer < 1 &&currentpageIndex != numberOfQuestions) {
+          
           t.cancel();
-          _pageController.nextPage(
-            duration: const Duration(milliseconds: 600),
-            curve: Curves.ease,
-          );
+          
 
           showtimer = "30";
           starttimer();
-          if (currentpageIndex == numberOfQuestions - 1) {
-            t.cancel();
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (ctx) => Resultpage(score: score)));
-            return;
-          }
 
+          if (currentpageIndex != numberOfQuestions-1) {
+
+
+            _pageController.nextPage(
+            duration: const Duration(milliseconds: 600),
+            curve: Curves.ease,
+          );
+            timer = 30;
+          }
+          else
+          {
+
+          t.cancel();
           canceltimer = false;
-          timer = 30;
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (ctx) => Resultpage(score: score)));
+          t.cancel();
+          return;
+          }
         } else if (canceltimer == true) {
           t.cancel();
-        } else {
+        } else if(timer>0){
           timer = timer - 1;
         }
         showtimer = timer.toString();
@@ -92,13 +109,13 @@ class _QuizPageState extends State<QuizPage> {
               .snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
-              return Center(
+              return const Center(
                 child: CupertinoActivityIndicator(),
               );
             } else {
-              int numberOfQuestions = snapshot.data!.docs.length;
+              numberOfQuestions = snapshot.data!.docs.length;
               return PageView.builder(
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   controller: _pageController,
                   itemCount: numberOfQuestions,
                   onPageChanged: (index) {
@@ -110,10 +127,11 @@ class _QuizPageState extends State<QuizPage> {
                     final quizsnap = snapshot.data!.docs[index];
                     final List<dynamic> options = quizsnap['options'];
                     final int correctAnswer = quizsnap['correctanswer'];
-                   
+
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Stack(
                             children: [
@@ -121,7 +139,7 @@ class _QuizPageState extends State<QuizPage> {
                                 height: 200,
                                 width: 410,
                                 decoration: BoxDecoration(
-                                    gradient: LinearGradient(
+                                    gradient: const LinearGradient(
                                       colors: [
                                         Color(0xffB81736),
                                         Color(0xff281537),
@@ -134,21 +152,21 @@ class _QuizPageState extends State<QuizPage> {
                                         .doc(quizsnap['category'])
                                         .snapshots(),
                                     builder: (context, AsyncSnapshot snapshot) {
-                                      if(!snapshot.hasData){
-                                        return CupertinoActivityIndicator();
-                                      }else{
-                                      return Padding(
-                                        padding: const EdgeInsets.only(
-                                            top: 20, left: 120),
-                                        child: Text(
-                                          snapshot.data['name'],
-                                          style: TextStyle(
-                                              fontSize: 30,
-                                              color: Color.fromARGB(
-                                                  255, 216, 164, 10),
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      );
+                                      if (!snapshot.hasData) {
+                                        return const CupertinoActivityIndicator();
+                                      } else {
+                                        return const Padding(
+                                          padding: EdgeInsets.only(
+                                              top: 20, left: 110),
+                                          // child: Text(
+                                          //   snapshot.data['name'],
+                                          //   style: const TextStyle(
+                                          //       fontSize: 30,
+                                          //       color: Color.fromARGB(
+                                          //           255, 216, 164, 10),
+                                          //       fontWeight: FontWeight.bold),
+                                          // ),
+                                        );
                                       }
                                     }),
                               ),
@@ -161,7 +179,7 @@ class _QuizPageState extends State<QuizPage> {
                                   decoration: BoxDecoration(
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(20),
-                                      boxShadow: [
+                                      boxShadow: const [
                                         BoxShadow(
                                             blurRadius: 3,
                                             spreadRadius: 4,
@@ -179,12 +197,26 @@ class _QuizPageState extends State<QuizPage> {
                                         child: Center(
                                           child: Column(
                                             children: [
-                                               Text(' ${index+1}/${numberOfQuestions}',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500),),
-                                              Text(
-                                                quizsnap['question'],
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w500,
-                                                    color: Colors.black),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                  right: 10,
+                                                ),
+                                                child: Text(
+                                                  ' ${index + 1}/$numberOfQuestions',
+                                                  style: const TextStyle(
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                ),
+                                              ),
+                                              Center(
+                                                child: Text(
+                                                  quizsnap['question'],
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.black),
+                                                ),
                                               ),
                                             ],
                                           ),
@@ -195,13 +227,13 @@ class _QuizPageState extends State<QuizPage> {
                               // SizedBox(height: 20,),
                               Positioned(
                                 top: 80,
-                                left: 130,
+                                left: 140,
                                 child: CircleAvatar(
                                   radius: 45,
                                   backgroundColor: Colors.white,
                                   child: Text(
                                     showtimer,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontSize: 30, color: Colors.black),
                                   ),
                                 ),
@@ -224,7 +256,6 @@ class _QuizPageState extends State<QuizPage> {
                                               selectedOptionIndex = index;
                                               if (selectedOptionIndex ==
                                                   correctAnswer) {
-                                               
                                                 colorsToShow[correctAnswer] =
                                                     istrue;
                                                 score += 5;
@@ -243,15 +274,15 @@ class _QuizPageState extends State<QuizPage> {
                                                 colorsToShow[correctAnswer] =
                                                     istrue;
                                               }
-                                              print(score);
+                                              // print(score);
                                               canceltimer = true;
                                             });
 
                                             await Future.delayed(
                                                 const Duration(seconds: 2));
-                                            setState(()  {
+                                            setState(() {
                                               canceltimer = true;
-                                              Timer(Duration(seconds: 0),
+                                              Timer(const Duration(seconds: 0),
                                                   () async {
                                                 if (currentpageIndex ==
                                                     numberOfQuestions - 1) {
@@ -263,7 +294,7 @@ class _QuizPageState extends State<QuizPage> {
                                                               )));
                                                 }
                                                 await _pageController.nextPage(
-                                                  duration: Duration(
+                                                  duration: const Duration(
                                                       milliseconds: 600), //
                                                   curve: Curves.linear,
                                                 );
@@ -317,5 +348,4 @@ class _QuizPageState extends State<QuizPage> {
           }),
     ));
   }
-
 }

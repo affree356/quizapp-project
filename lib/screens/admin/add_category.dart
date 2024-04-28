@@ -27,10 +27,10 @@ class AddCategory extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-          preferredSize: Size.fromHeight(80),
+          preferredSize: const Size.fromHeight(80),
           child: Container(
             height: 100,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
                 color: Colors.black,
                 borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(20),
@@ -63,8 +63,8 @@ class AddCategory extends StatelessWidget {
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
+                      boxShadow:const [
+                         BoxShadow(
                           blurRadius: 1,
                           spreadRadius: 2,
                           color: Colors.black12,
@@ -109,7 +109,7 @@ class AddCategory extends StatelessWidget {
                             Colors.green);
                       }
                     },
-                    child: Text(
+                    child: const Text(
                       'Add',
                       style: TextStyle(color: Colors.white, fontSize: 20),
                     )),

@@ -39,6 +39,7 @@ dependencies:
   shared_preferences: ^2.2.2
   curved_navigation_bar: ^1.0.3
   image_picker: ^1.0.7
+  firebase_storage: ^11.6.5
 
 dev_dependencies:
   build_runner: ^2.4.8
